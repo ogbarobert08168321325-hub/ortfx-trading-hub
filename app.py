@@ -2,7 +2,15 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Allows frontend to talk to this backend
+CORS(app)  # Enable CORS so your frontend can communicate with this backend
+
+
+@app.route("/")
+def home():
+  return (
+      "QuantEdge Pro Python Backend is running successfully! API endpoints are"
+      " active."
+  )
 
 
 @app.route("/api/sync-broker", methods=["POST"])
@@ -10,15 +18,13 @@ def sync_broker():
   req_data = request.json or {}
   email = req_data.get("email")
   password = req_data.get("password")
-  broker = req_data.get("broker", "iqoption")
 
   if not email or not password:
     return jsonify(
         {"status": "error", "message": "Email and password are required."}
     ), 400
 
-  # Here you would add real broker login requests (e.g. IQ Option API auth)
-  # Returning simulated fetched live trades for demonstration:
+  # Simulated broker closed order synchronization payload
   fetched_trades = [
       {
           "id": 101,
