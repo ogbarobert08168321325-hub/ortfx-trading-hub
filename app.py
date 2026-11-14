@@ -1,16 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS so your frontend can communicate with this backend
+# Tells Flask to look for HTML files inside the 'templates' folder
+app = Flask(__name__, template_folder="templates")
+CORS(app)
 
 
+# This now serves your website directly at http://localhost:5000
 @app.route("/")
 def home():
-  return (
-      "QuantEdge Pro Python Backend is running successfully! API endpoints are"
-      " active."
-  )
+  return render_template("index.html")
 
 
 @app.route("/api/sync-broker", methods=["POST"])
@@ -48,5 +47,5 @@ def sync_broker():
 
 
 if __name__ == "__main__":
-  print("Python Broker Sync Backend running on http://localhost:5000")
+  print("QuantEdge Pro Server running on http://localhost:5000")
   app.run(host="0.0.0.0", port=5000, debug=True)
