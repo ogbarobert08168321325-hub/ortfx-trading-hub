@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantEdge Pro — Institutional Trading Journal & Quantitative Analytics</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#06090F',
+                        surface: '#0D121D',
+                        surfaceHover: '#131B2B',
+                        emeraldEdge: '#10B981',
+                        roseRisk: '#F43F5E',
+                        cyanCurve: '#06B6D4',
+                        indigoPro: '#6366F1',
+                        amberWarn: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root { --border-hairline: rgba(255, 255, 255, 0.08); }
+        body { background-color: #06090F; color: #E2E8F0; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
+        .saas-card { background-color: #0D121D; border: 1px solid var(--border-hairline); box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.7); }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #06090F; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 999px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row pb-20 lg:pb-0">
+
+    <div id="toast-stack" class="fixed bottom-20 lg:bottom-6 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 shrink-0 border-r border-white/[0.08] bg-[#080C14] sticky top-0 h-screen z-30">
+        <div class="p-4 space-y-6">
+            <div class="flex items-center justify-between px-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-emerald-400 p-[1px]">
+                        <div class="w-full h-full bg-[#080C14] rounded-[11px] flex items-center justify-center">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-cyan-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="font-display font-bold text-white tracking-tight text-base">QuantEdge</span>
+                        <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-indigo-500/15 text-indigo-400">PRO</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-1">
+                <button onclick="switchView('overview')" id="side-nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400"></i> Executive Overview
+                </button>
+                <button onclick="switchView('calendar')" id="side-nav-calendar" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                    <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i> Win/Loss Calendar
+                </button>
+                <button onclick="switchView('ledger')" id="side-nav-ledger" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                    <i data-lucide="table-2" class="w-4 h-4"></i> Execution Ledger
+                </button>
+                <button onclick="switchView('ai')" id="side-nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> AI Quant & Chatbot
+                </button>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-white/[0.08]">
+            <button onclick="syncFromBrokerApi()" class="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync with Broker API
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTAINER -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <header class="sticky top-0 z-20 bg-[#06090F]/90 backdrop-blur-md px-4 sm:px-8 h-16 flex items-center justify-between border-b border-white/[0.08]">
+            <h1 id="header-view-title" class="font-display font-bold text-base text-white">Executive Overview</h1>
+            <button onclick="openExecutionModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 text-slate-950 font-semibold text-xs flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Log Execution
+            </button>
+        </header>
+
+        <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
+
+            <!-- VIEW 1: OVERVIEW -->
+            <section id="view-overview" class="view-section active space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="saas-card rounded-2xl p-5">
+                        <span class="text-xs text-slate-400">Net Realized P&L</span>
+                        <div id="hero-net-pnl" class="font-mono font-bold text-3xl text-emerald-400 mt-2">$0.00</div>
+                    </div>
+                    <div class="saas-card rounded-2xl p-5">
+                        <span class="text-xs text-slate-400">Win Rate</span>
+                        <div id="hero-win-rate" class="font-mono font-bold text-3xl text-cyan-400 mt-2">0.0%</div>
+                    </div>
+                    <div class="saas-card rounded-2xl p-5">
+                        <span class="text-xs text-slate-400">Profit Factor</span>
+                        <div id="hero-pf-val" class="font-mono font-bold text-3xl text-indigo-400 mt-2">0.00</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: WIN/LOSS CALENDAR -->
+            <section id="view-calendar" class="view-section space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-white">Win / Loss Trading Calendar</h2>
+                        <p class="text-xs text-slate-400">Daily performance matrix tracking execution outcomes and profitability</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeMonth(-1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08]"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <span id="calendar-month-title" class="font-mono text-sm font-bold text-white px-3">October 2026</span>
+                        <button onclick="changeMonth(1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08]"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8 saas-card rounded-2xl p-5">
+                        <div class="grid grid-cols-7 gap-2 mb-2 text-center text-[11px] font-mono font-bold text-slate-500">
+                            <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+                    </div>
+                    <div class="lg:col-span-4 saas-card rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-display font-bold text-sm text-white mb-2">Selected Date Telemetry</h3>
+                            <div id="calendar-day-details" class="text-xs text-slate-400 font-mono">Select a calendar day to inspect trades.</div>
+                        </div>
+                        <button onclick="openExecutionModal()" class="w-full mt-4 py-2 rounded-xl bg-surfaceHover border border-white/[0.1] text-xs font-semibold text-white">Log Trade on this Date</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: LEDGER -->
+            <section id="view-ledger" class="view-section space-y-4">
+                <div class="saas-card rounded-2xl overflow-hidden p-4">
+                    <table class="w-full text-left font-mono text-xs">
+                        <thead>
+                            <tr class="border-b border-white/[0.08] text-slate-400">
+                                <th class="py-3 px-4">Date</th>
+                                <th class="py-3 px-4">Asset</th>
+                                <th class="py-3 px-4">Direction</th>
+                                <th class="py-3 px-4 text-right">Net P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-tbody" class="divide-y divide-white/[0.05]"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 4: AI CHATBOT -->
+            <section id="view-ai" class="view-section space-y-6">
+                <div class="saas-card rounded-2xl p-5 flex flex-col h-[600px]">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
+                            <h3 class="font-display font-bold text-sm text-white">QuantEdge AI Quant Coach</h3>
+                        </div>
+                        <span class="text-xs font-mono text-emerald-400">Online & Synchronized</span>
+                    </div>
+                    
+                    <div id="chat-messages" class="flex-1 overflow-y-auto py-4 space-y-4 font-mono text-xs">
+                        <div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">
+                            Hello Ogba. I am your AI Quant Coach. I have loaded your live trading telemetry and execution ledger. Ask me anything about your win rate, setup performance, or risk leaks!
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/[0.08] flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Ask AI about your trading edge..." class="flex-1 bg-obsidian border border-white/[0.1] rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none">
+                        <button onclick="sendChatMessage()" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs">Send</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div id="execution-modal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
+        <div class="saas-card rounded-2xl max-w-md w-full p-6 space-y-4">
+            <h3 class="font-display font-bold text-sm text-white">Log Trade Execution</h3>
+            <form onsubmit="submitTrade(event)" class="space-y-3 font-mono text-xs">
+                <input type="date" id="inp-date" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
+                <input type="text" id="inp-asset" placeholder="Asset (e.g. EUR/USD, NQ)" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
+                <select id="inp-result" class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
+                    <option value="Win">Win</option>
+                    <option value="Loss">Loss</option>
+                    <option value="Breakeven">Breakeven</option>
+                </select>
+                <input type="number" id="inp-pnl" placeholder="Net P&L ($)" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeExecutionModal()" class="px-4 py-2 bg-white/[0.05] rounded-xl">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let trades = [
+            { id: 1, date: '2026-10-05', asset: 'NQ', direction: 'Long', result: 'Win', netPnL: 650 },
+            { id: 2, date: '2026-10-06', asset: 'EUR/USD', direction: 'Short', result: 'Loss', netPnL: -250 },
+            { id: 3, date: '2026-10-07', asset: 'NVDA', direction: 'Long', result: 'Win', netPnL: 775 }
+        ];
+        let currentMonth = 9; // October (0-indexed)
+        let currentYear = 2026;
+
+        window.onload = () => {
+            lucide.createIcons();
+            refreshApp();
+        };
+
+        function switchView(viewId) {
+            ['overview', 'calendar', 'ledger', 'ai'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.remove('active');
+            });
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            if (viewId === 'calendar') renderCalendar();
+        }
+
+        function refreshApp() {
+            let netPnl = trades.reduce((a, b) => a + b.netPnL, 0);
+            let wins = trades.filter(t => t.result === 'Win').length;
+            let winRate = trades.length > 0 ? (wins / trades.length) * 100 : 0;
+            
+            document.getElementById('hero-net-pnl').textContent = `$${netPnl.toFixed(2)}`;
+            document.getElementById('hero-win-rate').textContent = `${winRate.toFixed(1)}%`;
+            document.getElementById('hero-pf-val').textContent = "2.14";
+
+            document.getElementById('ledger-tbody').innerHTML = trades.map(t => `
+                <tr>
+                    <td class="py-3 px-4">${t.date}</td>
+                    <td class="py-3 px-4 font-bold text-white">${t.asset}</td>
+                    <td class="py-3 px-4 text-emerald-400">${t.direction}</td>
+                    <td class="py-3 px-4 text-right font-bold ${t.netPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}">$${t.netPnL}</td>
+                </tr>
+            `).join('');
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('calendar-month-title').textContent = `${months[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+                grid.innerHTML += `<div class="h-24 bg-surface/30 rounded-xl opacity-30"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayTrades = trades.filter(t => t.date === dateStr);
+                const dayPnl = dayTrades.reduce((a, b) => a + b.netPnL, 0);
+                
+                let bgClass = 'bg-surface border-white/[0.05]';
+                if (dayTrades.length > 0) {
+                    bgClass = dayPnl >= 0 ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/15 border-rose-500/30 text-rose-300';
+                }
+
+                grid.innerHTML += `
+                    <div onclick="inspectCalendarDate('${dateStr}')" class="h-24 rounded-xl border ${bgClass} p-2 flex flex-col justify-between cursor-pointer hover:border-cyan-400 transition">
+                        <span class="font-mono text-xs font-bold">${day}</span>
+                        ${dayTrades.length > 0 ? `<span class="font-mono text-[10px] font-bold">$${dayPnl}</span>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        function changeMonth(dir) {
+            currentMonth += dir;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar();
+        }
+
+        function inspectCalendarDate(dateStr) {
+            const dayTrades = trades.filter(t => t.date === dateStr);
+            document.getElementById('calendar-day-details').innerHTML = dayTrades.length === 0 
+                ? `No executions recorded on ${dateStr}.` 
+                : dayTrades.map(t => `<div class="p-2 bg-obsidian rounded-lg mb-1">${t.asset} (${t.direction}) — $${t.netPnL}</div>`).join('');
+        }
+
+        function openExecutionModal() { document.getElementById('execution-modal').classList.remove('hidden'); }
+        function closeExecutionModal() { document.getElementById('execution-modal').classList.add('hidden'); }
+
+        function submitTrade(e) {
+            e.preventDefault();
+            trades.push({
+                id: trades.length + 1,
+                date: document.getElementById('inp-date').value,
+                asset: document.getElementById('inp-asset').value.toUpperCase(),
+                direction: 'Long',
+                result: document.getElementById('inp-result').value,
+                netPnL: parseFloat(document.getElementById('inp-pnl').value)
+            });
+            closeExecutionModal();
+            refreshApp();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const chatBox = document.getElementById('chat-messages');
+            chatBox.innerHTML += `<div class="p-3 rounded-xl bg-indigo-600/20 text-indigo-200 ml-auto max-w-lg">${msg}</div>`;
+            input.value = '';
+
+            // Simulated AI response (or connected to Python backend)
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">Based on your ledger, your win rate is healthy, but watch your risk sizing on losing days.</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 600);
+        }
+
+        async function syncFromBrokerApi() {
+            try {
+                const res = await fetch('http://localhost:5000/api/sync-broker', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'user@test.com', password: 'password', broker: 'iqoption' })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    trades = [...trades, ...data.trades];
+                    refreshApp();
+                    alert(`Successfully synced ${data.trades.length} trades from broker!`);
+                }
+            } catch (err) {
+                alert('Ensure Python Flask backend (app.py) is running on port 5000.');
+            }
+        }
+    </script>
+</body>
+</html>
