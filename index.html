@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -74,22 +75,22 @@
 
             <!-- Navigation -->
             <nav class="space-y-1">
-                <button onclick="switchView('overview')" id="side-nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition">
+                <button onclick="switchView('overview')" id="side-nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition cursor-pointer">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400"></i> Executive Overview
                 </button>
-                <button onclick="switchView('calendar')" id="side-nav-calendar" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                <button onclick="switchView('calendar')" id="side-nav-calendar" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
                     <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i> Win/Loss Calendar
                 </button>
-                <button onclick="switchView('ledger')" id="side-nav-ledger" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                <button onclick="switchView('ledger')" id="side-nav-ledger" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
                     <i data-lucide="table-2" class="w-4 h-4"></i> Execution Ledger
                 </button>
-                <button onclick="switchView('ai')" id="side-nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition">
+                <button onclick="switchView('ai')" id="side-nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
                     <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> AI Quant & Chatbot
                 </button>
             </nav>
         </div>
         <div class="p-4 border-t border-white/[0.08]">
-            <button onclick="syncFromBrokerApi()" class="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition">
+            <button onclick="syncFromBrokerApi()" class="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync with Broker API
             </button>
         </div>
@@ -99,7 +100,7 @@
     <div class="flex-1 flex flex-col min-w-0">
         <header class="sticky top-0 z-20 bg-[#06090F]/90 backdrop-blur-md px-4 sm:px-8 h-16 flex items-center justify-between border-b border-white/[0.08]">
             <h1 id="header-view-title" class="font-display font-bold text-base text-white">Executive Overview</h1>
-            <button onclick="openExecutionModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 text-slate-950 font-semibold text-xs flex items-center gap-2">
+            <button onclick="openExecutionModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-2 transition cursor-pointer">
                 <i data-lucide="plus" class="w-4 h-4"></i> Log Execution
             </button>
         </header>
@@ -132,9 +133,9 @@
                         <p class="text-xs text-slate-400">Daily performance matrix tracking execution outcomes and profitability</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="changeMonth(-1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08]"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <button onclick="changeMonth(-1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08] cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                         <span id="calendar-month-title" class="font-mono text-sm font-bold text-white px-3">October 2026</span>
-                        <button onclick="changeMonth(1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08]"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        <button onclick="changeMonth(1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08] cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
@@ -150,7 +151,7 @@
                             <h3 class="font-display font-bold text-sm text-white mb-2">Selected Date Telemetry</h3>
                             <div id="calendar-day-details" class="text-xs text-slate-400 font-mono">Select a calendar day to inspect trades.</div>
                         </div>
-                        <button onclick="openExecutionModal()" class="w-full mt-4 py-2 rounded-xl bg-surfaceHover border border-white/[0.1] text-xs font-semibold text-white">Log Trade on this Date</button>
+                        <button onclick="openExecutionModal()" class="w-full mt-4 py-2 rounded-xl bg-surfaceHover hover:bg-surface border border-white/[0.1] text-xs font-semibold text-white transition cursor-pointer">Log Trade on this Date</button>
                     </div>
                 </div>
             </section>
@@ -185,13 +186,13 @@
                     
                     <div id="chat-messages" class="flex-1 overflow-y-auto py-4 space-y-4 font-mono text-xs">
                         <div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">
-                            Hello Ogba. I am your AI Quant Coach. I have loaded your live trading telemetry and execution ledger. Ask me anything about your win rate, setup performance, or risk leaks!
+                            Hello. I am your AI Quant Coach. I have loaded your live trading telemetry and execution ledger. Ask me anything about your win rate, setup performance, or risk leaks.
                         </div>
                     </div>
 
                     <div class="pt-4 border-t border-white/[0.08] flex gap-2">
                         <input type="text" id="chat-input" placeholder="Ask AI about your trading edge..." class="flex-1 bg-obsidian border border-white/[0.1] rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none">
-                        <button onclick="sendChatMessage()" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs">Send</button>
+                        <button onclick="sendChatMessage()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition cursor-pointer">Send</button>
                     </div>
                 </div>
             </section>
@@ -213,8 +214,8 @@
                 </select>
                 <input type="number" id="inp-pnl" placeholder="Net P&L ($)" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeExecutionModal()" class="px-4 py-2 bg-white/[0.05] rounded-xl">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl">Save</button>
+                    <button type="button" onclick="closeExecutionModal()" class="px-4 py-2 bg-white/[0.05] rounded-xl cursor-pointer">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl cursor-pointer">Save</button>
                 </div>
             </form>
         </div>
@@ -232,13 +233,18 @@
         window.onload = () => {
             lucide.createIcons();
             refreshApp();
+            document.getElementById('inp-date').valueAsDate = new Date();
         };
 
         function switchView(viewId) {
             ['overview', 'calendar', 'ledger', 'ai'].forEach(v => {
                 document.getElementById(`view-${v}`).classList.remove('active');
+                const btn = document.getElementById(`side-nav-${v}`);
+                if (btn) btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer';
             });
             document.getElementById(`view-${viewId}`).classList.add('active');
+            const activeBtn = document.getElementById(`side-nav-${viewId}`);
+            if (activeBtn) activeBtn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition cursor-pointer';
             if (viewId === 'calendar') renderCalendar();
         }
 
@@ -334,28 +340,35 @@
             chatBox.innerHTML += `<div class="p-3 rounded-xl bg-indigo-600/20 text-indigo-200 ml-auto max-w-lg">${msg}</div>`;
             input.value = '';
 
-            // Simulated AI response (or connected to Python backend)
             setTimeout(() => {
-                chatBox.innerHTML += `<div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">Based on your ledger, your win rate is healthy, but watch your risk sizing on losing days.</div>`;
+                chatBox.innerHTML += `<div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">Based on your ledger, your win rate is healthy. Keep managing your risk per trade strictly.</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
             }, 600);
         }
 
+        // CONNECTED TO app.py BACKEND ON PORT 5000
         async function syncFromBrokerApi() {
+            const email = prompt("Enter your Broker Email / Username:");
+            const password = prompt("Enter your Broker Password:");
+            if (!email || !password) return;
+
             try {
                 const res = await fetch('http://localhost:5000/api/sync-broker', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: 'user@test.com', password: 'password', broker: 'iqoption' })
+                    body: JSON.stringify({ email, password, broker: 'iqoption' })
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
                     trades = [...trades, ...data.trades];
                     refreshApp();
                     alert(`Successfully synced ${data.trades.length} trades from broker!`);
+                } else {
+                    alert(data.message || 'Sync failed.');
                 }
             } catch (err) {
-                alert('Ensure Python Flask backend (app.py) is running on port 5000.');
+                console.error(err);
+                alert('Could not connect to Python backend. Make sure app.py is running via python app.py.');
             }
         }
     </script>
