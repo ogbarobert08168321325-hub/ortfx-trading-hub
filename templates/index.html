@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -12,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -36,340 +35,2001 @@
                         cyanCurve: '#06B6D4',
                         indigoPro: '#6366F1',
                         amberWarn: '#F59E0B',
+                    },
+                    transitionTimingFunction: {
+                        'expo-out': 'cubic-bezier(0.16, 1, 0.3, 1)',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        :root { --border-hairline: rgba(255, 255, 255, 0.08); }
-        body { background-color: #06090F; color: #E2E8F0; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
-        .saas-card { background-color: #0D121D; border: 1px solid var(--border-hairline); box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.7); }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
+        :root {
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --inner-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: #06090F;
+            color: #E2E8F0;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Pro Agency Card Surface */
+        .saas-card {
+            background-color: #0D121D;
+            border: 1px solid var(--border-hairline);
+            box-shadow: var(--inner-highlight), 0 10px 30px -15px rgba(0, 0, 0, 0.7);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .saas-card-interactive:hover {
+            background-color: #131B2B;
+            border-color: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        /* Radial Hero Lighting */
+        .hero-glow-emerald {
+            background: radial-gradient(120% 100% at 50% 0%, rgba(16, 185, 129, 0.11) 0%, rgba(13, 18, 29, 0) 70%), #0D121D;
+        }
+        .hero-glow-cyan {
+            background: radial-gradient(120% 100% at 50% 0%, rgba(6, 182, 212, 0.11) 0%, rgba(13, 18, 29, 0) 70%), #0D121D;
+        }
+        .hero-glow-indigo {
+            background: radial-gradient(120% 100% at 50% 0%, rgba(99, 102, 241, 0.12) 0%, rgba(13, 18, 29, 0) 70%), #0D121D;
+        }
+
+        /* Glassmorphic Header & Overlays */
+        .glass-header {
+            background: rgba(6, 9, 15, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-hairline);
+        }
+
+        /* Custom Sleek Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #06090F; }
         ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        .view-section { display: none; animation: fadeSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view-section.active { display: block; }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col lg:flex-row pb-20 lg:pb-0">
+<body class="min-h-screen flex flex-col lg:flex-row selection:bg-cyan-500/30 selection:text-cyan-100 pb-20 lg:pb-0">
 
+    <!-- Toast Notification Stack -->
     <div id="toast-stack" class="fixed bottom-20 lg:bottom-6 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <!-- SIDEBAR -->
-    <aside class="hidden lg:flex flex-col justify-between w-64 shrink-0 border-r border-white/[0.08] bg-[#080C14] sticky top-0 h-screen z-30">
+    <!-- ===================================================================== -->
+    <!-- LEFT COLLAPSIBLE SIDEBAR (DESKTOP)                                   -->
+    <!-- ===================================================================== -->
+    <aside id="desktop-sidebar" class="hidden lg:flex flex-col justify-between w-64 shrink-0 border-r border-white/[0.08] bg-[#080C14] sticky top-0 h-screen transition-all duration-300 ease-expo-out z-30">
         <div class="p-4 space-y-6">
+            <!-- Brand Header -->
             <div class="flex items-center justify-between px-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-emerald-400 p-[1px]">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <!-- Custom QuantEdge Pro SVG Logo -->
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-emerald-400 p-[1px] shrink-0 shadow-lg shadow-cyan-500/15">
                         <div class="w-full h-full bg-[#080C14] rounded-[11px] flex items-center justify-center">
-                            <i data-lucide="trending-up" class="w-5 h-5 text-cyan-400"></i>
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 17L9 11L13 15L21 7" stroke="url(#qe_grad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 7H21V12" stroke="#10B981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="qe_grad" x1="3" y1="17" x2="21" y2="7" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#06B6D4"/>
+                                        <stop offset="1" stop-color="#10B981"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                     </div>
-                    <div>
-                        <span class="font-display font-bold text-white tracking-tight text-base">QuantEdge</span>
-                        <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-indigo-500/15 text-indigo-400">PRO</span>
+                    <div class="sidebar-label truncate">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-display font-bold text-white tracking-tight text-base">QuantEdge</span>
+                            <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">PRO</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 font-medium">Institutional Suite</p>
                     </div>
                 </div>
+                <button onclick="toggleSidebar()" title="Collapse Sidebar" class="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/[0.05] transition cursor-pointer">
+                    <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+                </button>
             </div>
 
-            <!-- Navigation -->
+            <!-- Live Account Equity Pill -->
+            <div class="sidebar-label rounded-xl bg-surface border border-white/[0.08] p-3 shadow-inner">
+                <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Live Equity
+                    </span>
+                    <span id="sidebar-roi-badge" class="font-mono text-[10px] font-semibold text-emerald-400">+0.0%</span>
+                </div>
+                <div id="sidebar-equity-val" class="font-mono font-bold text-lg text-white tabular-nums tracking-tight">$10,000.00</div>
+            </div>
+
+            <!-- Primary CTA: + Log Execution -->
+            <button onclick="openExecutionModal()" class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-semibold text-xs flex items-center justify-between shadow-lg shadow-emerald-500/20 transition cursor-pointer group">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-4 h-4 stroke-[2.4]"></i>
+                    <span class="sidebar-label">Log Execution</span>
+                </span>
+                <kbd class="sidebar-label px-1.5 py-0.5 text-[10px] font-mono font-bold bg-black/20 text-slate-950 rounded">N</kbd>
+            </button>
+
+            <!-- Navigation Links -->
             <nav class="space-y-1">
-                <button onclick="switchView('overview')" id="side-nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition cursor-pointer">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400"></i> Executive Overview
+                <div class="sidebar-label px-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-slate-500">Analytics</div>
+                
+                <button onclick="switchView('overview')" id="side-nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white border border-white/[0.08] transition cursor-pointer">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+                    <span class="sidebar-label">Executive Overview</span>
                 </button>
-                <button onclick="switchView('calendar')" id="side-nav-calendar" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
-                    <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i> Win/Loss Calendar
+
+                <button onclick="switchView('ledger')" id="side-nav-ledger" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
+                    <span class="flex items-center gap-3">
+                        <i data-lucide="table-2" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        <span class="sidebar-label">Execution Ledger</span>
+                    </span>
+                    <span id="sidebar-trade-count" class="sidebar-label px-1.5 py-0.5 text-[10px] font-mono rounded bg-white/[0.06] text-slate-300 tabular-nums">24</span>
                 </button>
-                <button onclick="switchView('ledger')" id="side-nav-ledger" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
-                    <i data-lucide="table-2" class="w-4 h-4"></i> Execution Ledger
+
+                <button onclick="switchView('attribution')" id="side-nav-attribution" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
+                    <i data-lucide="layers" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                    <span class="sidebar-label">Edge & Attribution</span>
                 </button>
-                <button onclick="switchView('ai')" id="side-nav-ai" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> AI Quant & Chatbot
+
+                <button onclick="switchView('discipline')" id="side-nav-discipline" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                    <span class="sidebar-label">Discipline & Leaks</span>
+                </button>
+
+                <button onclick="switchView('ai')" id="side-nav-ai" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
+                    <span class="flex items-center gap-3">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                        <span class="sidebar-label">AI Quant Analyst</span>
+                    </span>
+                    <span class="sidebar-label w-2 h-2 rounded-full bg-indigo-500"></span>
                 </button>
             </nav>
         </div>
-        <div class="p-4 border-t border-white/[0.08]">
-            <button onclick="syncFromBrokerApi()" class="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync with Broker API
+
+        <!-- Sidebar Bottom Utilities -->
+        <div class="p-4 border-t border-white/[0.08] space-y-2">
+            <button onclick="openCsvDrawer()" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer">
+                <i data-lucide="database" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-label">Import / Export CSV</span>
+            </button>
+            <button onclick="resetDemoData()" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:text-amber-400 hover:bg-white/[0.04] transition cursor-pointer">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-label">Reset Demo Data</span>
             </button>
         </div>
     </aside>
 
-    <!-- MAIN CONTAINER -->
+    <!-- ===================================================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION BAR                                          -->
+    <!-- ===================================================================== -->
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 glass-header border-t border-white/[0.08] px-2 py-1.5 flex items-center justify-around">
+        <button onclick="switchView('overview')" id="mob-nav-overview" class="flex flex-col items-center gap-1 py-1 px-2 text-cyan-400">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span class="text-[10px] font-medium">Overview</span>
+        </button>
+        <button onclick="switchView('ledger')" id="mob-nav-ledger" class="flex flex-col items-center gap-1 py-1 px-2 text-slate-400">
+            <i data-lucide="table-2" class="w-4 h-4"></i>
+            <span class="text-[10px] font-medium">Ledger</span>
+        </button>
+        <button onclick="openExecutionModal()" class="flex items-center justify-center w-10 h-10 -mt-5 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/30">
+            <i data-lucide="plus" class="w-5 h-5 stroke-[2.5]"></i>
+        </button>
+        <button onclick="switchView('attribution')" id="mob-nav-attribution" class="flex flex-col items-center gap-1 py-1 px-2 text-slate-400">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span class="text-[10px] font-medium">Edges</span>
+        </button>
+        <button onclick="switchView('discipline')" id="mob-nav-discipline" class="flex flex-col items-center gap-1 py-1 px-2 text-slate-400">
+            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+            <span class="text-[10px] font-medium">Leaks</span>
+        </button>
+        <button onclick="switchView('ai')" id="mob-nav-ai" class="flex flex-col items-center gap-1 py-1 px-2 text-slate-400">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span class="text-[10px] font-medium">AI Quant</span>
+        </button>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- MAIN WORKSPACE CONTAINER                                              -->
+    <!-- ===================================================================== -->
     <div class="flex-1 flex flex-col min-w-0">
-        <header class="sticky top-0 z-20 bg-[#06090F]/90 backdrop-blur-md px-4 sm:px-8 h-16 flex items-center justify-between border-b border-white/[0.08]">
-            <h1 id="header-view-title" class="font-display font-bold text-base text-white">Executive Overview</h1>
-            <button onclick="openExecutionModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-2 transition cursor-pointer">
-                <i data-lucide="plus" class="w-4 h-4"></i> Log Execution
-            </button>
+        
+        <!-- Sticky Glassmorphic Top Header -->
+        <header class="sticky top-0 z-20 glass-header px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="lg:hidden flex items-center gap-2">
+                    <span class="font-display font-bold text-white text-base">QuantEdge</span>
+                    <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">PRO</span>
+                </div>
+                <div class="hidden lg:block">
+                    <h1 id="header-view-title" class="font-display font-bold text-base text-white tracking-tight">Executive Overview</h1>
+                    <p id="header-view-subtitle" class="text-xs text-slate-400">Real-time statistical edge, equity curve telemetry & risk attribution</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Starting Capital Input -->
+                <div class="flex items-center gap-2 bg-surface border border-white/[0.08] rounded-xl px-3 py-1.5">
+                    <span class="text-[11px] text-slate-400 hidden sm:inline">Base Capital:</span>
+                    <span class="text-xs font-mono text-slate-500">$</span>
+                    <input type="number" id="starting-balance-input" value="10000" min="100" step="500"
+                        class="w-20 bg-transparent font-mono text-xs font-semibold text-white tabular-nums focus:outline-none focus:text-cyan-400"
+                        onchange="updateStartingBalance()">
+                </div>
+
+                <!-- Quick CSV Drawer Button -->
+                <button onclick="openCsvDrawer()" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08] text-slate-300 hover:text-white transition cursor-pointer" title="Import / Export CSV">
+                    <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Log Execution Button (Desktop Header Quick Access) -->
+                <button onclick="openExecutionModal()" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.1] text-xs font-semibold text-white transition cursor-pointer">
+                    <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <span>Log Trade</span>
+                    <kbd class="ml-1 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-obsidian rounded border border-white/[0.08]">⌘K</kbd>
+                </button>
+            </div>
         </header>
 
-        <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
+        <!-- Main Content Canvas -->
+        <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 
-            <!-- VIEW 1: OVERVIEW -->
+            <!-- =============================================================== -->
+            <!-- VIEW 1: EXECUTIVE OVERVIEW (DASHBOARD)                          -->
+            <!-- =============================================================== -->
             <section id="view-overview" class="view-section active space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="saas-card rounded-2xl p-5">
-                        <span class="text-xs text-slate-400">Net Realized P&L</span>
-                        <div id="hero-net-pnl" class="font-mono font-bold text-3xl text-emerald-400 mt-2">$0.00</div>
+                
+                <!-- Top Metric Strip: 4 Hero Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    
+                    <!-- Hero 1: Net P&L & ROI % -->
+                    <div class="saas-card saas-card-interactive hero-glow-emerald rounded-2xl p-5 flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Net Realized P&L</span>
+                            <span id="hero-roi-pill" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 tabular-nums">+0.00% ROI</span>
+                        </div>
+                        <div class="my-3 flex items-baseline justify-between gap-2">
+                            <div id="hero-net-pnl" class="font-mono font-bold text-2xl sm:text-3xl text-white tabular-nums tracking-tight">+$0.00</div>
+                            <!-- Micro Sparkline SVG -->
+                            <svg id="hero-pnl-sparkline" class="w-20 h-8 overflow-visible" viewBox="0 0 80 32"></svg>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-2 border-t border-white/[0.06] tabular-nums">
+                            <span>Total R: <strong id="hero-total-r" class="text-emerald-400">+0.00R</strong></span>
+                            <span>Executions: <strong id="hero-total-count" class="text-slate-200">0</strong></span>
+                        </div>
                     </div>
-                    <div class="saas-card rounded-2xl p-5">
-                        <span class="text-xs text-slate-400">Win Rate</span>
-                        <div id="hero-win-rate" class="font-mono font-bold text-3xl text-cyan-400 mt-2">0.0%</div>
+
+                    <!-- Hero 2: Profit Factor with Radial Gauge -->
+                    <div class="saas-card saas-card-interactive hero-glow-cyan rounded-2xl p-5 flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Profit Factor</span>
+                            <span id="hero-pf-badge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">INSTITUTIONAL &gt; 1.5</span>
+                        </div>
+                        <div class="my-2 flex items-center justify-between">
+                            <div>
+                                <div id="hero-pf-val" class="font-mono font-bold text-2xl sm:text-3xl text-white tabular-nums">0.00</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">Target benchmark: 1.50+</div>
+                            </div>
+                            <!-- Radial Progress Ring -->
+                            <div class="relative w-12 h-12 flex items-center justify-center">
+                                <svg class="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
+                                    <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+                                    <circle id="hero-pf-ring" cx="22" cy="22" r="18" fill="none" stroke="#06B6D4" stroke-width="4" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round"/>
+                                </svg>
+                                <span id="hero-pf-ring-label" class="absolute font-mono text-[10px] font-bold text-cyan-400">PF</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-2 border-t border-white/[0.06] tabular-nums">
+                            <span>Gross Win: <strong id="hero-gross-win" class="text-emerald-400">+$0</strong></span>
+                            <span>Loss: <strong id="hero-gross-loss" class="text-rose-400">-$0</strong></span>
+                        </div>
                     </div>
-                    <div class="saas-card rounded-2xl p-5">
-                        <span class="text-xs text-slate-400">Profit Factor</span>
-                        <div id="hero-pf-val" class="font-mono font-bold text-3xl text-indigo-400 mt-2">0.00</div>
+
+                    <!-- Hero 3: Win Rate % with W/L/BE Segmented Bar -->
+                    <div class="saas-card saas-card-interactive rounded-2xl p-5 flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Win Rate (Excl. BE)</span>
+                            <span id="hero-gross-wr" class="text-[11px] font-mono text-slate-400 tabular-nums">Gross: 0.0%</span>
+                        </div>
+                        <div class="my-2.5">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <span id="hero-win-rate" class="font-mono font-bold text-2xl sm:text-3xl text-white tabular-nums">0.0%</span>
+                                <span id="hero-wlbe-text" class="text-[11px] font-mono text-slate-400 tabular-nums">0W • 0L • 0BE</span>
+                            </div>
+                            <!-- W / L / BE Segmented Progress Bar -->
+                            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden flex gap-0.5">
+                                <div id="bar-seg-win" class="bg-emerald-500 h-full transition-all duration-500" style="width: 50%"></div>
+                                <div id="bar-seg-be" class="bg-amber-400 h-full transition-all duration-500" style="width: 10%"></div>
+                                <div id="bar-seg-loss" class="bg-rose-500 h-full transition-all duration-500" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-2 border-t border-white/[0.06]">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Wins</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span>BE</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Losses</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero 4: Trade Expectancy -->
+                    <div class="saas-card saas-card-interactive hero-glow-indigo rounded-2xl p-5 flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Statistical Expectancy</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">EDGE / TRADE</span>
+                        </div>
+                        <div class="my-3 flex items-baseline gap-2.5">
+                            <div id="hero-exp-dollar" class="font-mono font-bold text-2xl sm:text-3xl text-emerald-400 tabular-nums">+$0.00</div>
+                            <div id="hero-exp-r" class="font-mono font-semibold text-sm text-indigo-300 tabular-nums">(+0.00R)</div>
+                        </div>
+                        <div class="text-[11px] text-slate-400 pt-2 border-t border-white/[0.06] flex items-center justify-between">
+                            <span>Expected return per execution</span>
+                            <i data-lucide="activity" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Risk & Efficiency Strip: 4 Precision Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    
+                    <!-- Sec 1: Realized Reward-to-Risk -->
+                    <div class="saas-card rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>Realized Reward : Risk</span>
+                            <span id="sec-planned-rr" class="font-mono text-[11px] text-slate-500 tabular-nums">Plan: 1:2.0</span>
+                        </div>
+                        <div id="sec-realized-rr" class="font-mono font-bold text-xl text-white tabular-nums mb-2">0.00 : 1</div>
+                        <div class="w-full h-1.5 rounded-full bg-rose-500/30 overflow-hidden flex">
+                            <div id="rr-ratio-bar" class="bg-cyan-400 h-full transition-all duration-500" style="width: 65%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sec 2: Max Drawdown -->
+                    <div class="saas-card rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>Max Drawdown</span>
+                            <span id="sec-dd-status" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400">AT PEAK</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span id="sec-dd-dollar" class="font-mono font-bold text-xl text-rose-400 tabular-nums">-$0.00</span>
+                            <span id="sec-dd-pct" class="font-mono text-xs text-rose-400/80 tabular-nums">(-0.00%)</span>
+                        </div>
+                        <div class="text-[11px] text-slate-500 mt-1.5">Peak-to-trough equity contraction</div>
+                    </div>
+
+                    <!-- Sec 3: Average Win vs Average Loss -->
+                    <div class="saas-card rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="text-xs text-slate-400 mb-2">Avg Win vs. Avg Loss</div>
+                        <div class="grid grid-cols-2 gap-3 font-mono tabular-nums">
+                            <div>
+                                <div id="sec-avg-win-d" class="text-sm font-bold text-emerald-400">+$0.00</div>
+                                <div id="sec-avg-win-r" class="text-[11px] text-emerald-400/75">+0.00R</div>
+                            </div>
+                            <div class="border-l border-white/[0.08] pl-3">
+                                <div id="sec-avg-loss-d" class="text-sm font-bold text-rose-400">-$0.00</div>
+                                <div id="sec-avg-loss-r" class="text-[11px] text-rose-400/75">-0.00R</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sec 4: Streak Telemetry -->
+                    <div class="saas-card rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>Streak Telemetry</span>
+                            <span id="sec-cur-streak" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-slate-300">Flat</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 font-mono tabular-nums">
+                            <div>
+                                <span class="text-[10px] text-slate-500 block font-sans">Max Wins</span>
+                                <span id="sec-max-win-streak" class="text-base font-bold text-emerald-400">0W</span>
+                            </div>
+                            <div class="border-l border-white/[0.08] pl-3">
+                                <span class="text-[10px] text-slate-500 block font-sans">Max Losses</span>
+                                <span id="sec-max-loss-streak" class="text-base font-bold text-rose-400">0L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Interactive Chart Studio -->
+                <div class="saas-card rounded-2xl p-5 sm:p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="font-display font-bold text-base text-white">Performance Telemetry Studio</h2>
+                                <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">LIVE</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-0.5">Cumulative equity progression, R-multiple curve, and daily PnL distribution</p>
+                        </div>
+
+                        <!-- Segmented Pill Toggles -->
+                        <div class="inline-flex p-1 rounded-xl bg-obsidian border border-white/[0.08] self-start">
+                            <button onclick="setMainChartMode('equity')" id="chart-tab-equity" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-surfaceHover text-cyan-400 shadow-sm transition cursor-pointer">
+                                Equity Curve ($)
+                            </button>
+                            <button onclick="setMainChartMode('rmultiple')" id="chart-tab-rmultiple" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition cursor-pointer">
+                                Cumulative R
+                            </button>
+                            <button onclick="setMainChartMode('histogram')" id="chart-tab-histogram" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition cursor-pointer">
+                                Daily P&L Histogram
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full h-72 sm:h-80">
+                        <canvas id="mainTelemetryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Calendar Heat-Map & Recent Executions Split -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Daily P&L Intensity Heat-Map (5 cols) -->
+                    <div class="lg:col-span-5 saas-card rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="font-display font-bold text-sm text-white">Daily P&L Intensity Matrix</h3>
+                                <div class="flex items-center gap-1 text-[10px] font-mono text-slate-500">
+                                    <span>Loss</span>
+                                    <span class="w-2.5 h-2.5 rounded-sm bg-rose-500/70"></span>
+                                    <span class="w-2.5 h-2.5 rounded-sm bg-slate-800"></span>
+                                    <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500/40"></span>
+                                    <span class="w-2.5 h-2.5 rounded-sm bg-emerald-400"></span>
+                                    <span>Alpha</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Session-by-session realized net return intensity</p>
+                            
+                            <div id="daily-heatmap-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-slate-400 tabular-nums">
+                            <span id="heatmap-green-days">Green Days: 0</span>
+                            <span id="heatmap-red-days">Red Days: 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Executions Feed (7 cols) -->
+                    <div class="lg:col-span-7 saas-card rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="font-display font-bold text-sm text-white">Recent Executions</h3>
+                                    <p class="text-xs text-slate-400">Latest 5 logged positions across all asset classes</p>
+                                </div>
+                                <button onclick="switchView('ledger')" class="text-xs font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition cursor-pointer">
+                                    <span>View Full Ledger</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-white/[0.08] text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                                            <th class="py-2 pr-3">Ticker</th>
+                                            <th class="py-2 px-3">Setup</th>
+                                            <th class="py-2 px-3">Session</th>
+                                            <th class="py-2 px-3 text-right">R-Mult</th>
+                                            <th class="py-2 pl-3 text-right">Net P&L</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-trades-tbody" class="divide-y divide-white/[0.05] text-xs font-mono tabular-nums">
+                                        <!-- Populated via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW 2: WIN/LOSS CALENDAR -->
-            <section id="view-calendar" class="view-section space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="font-display font-bold text-xl text-white">Win / Loss Trading Calendar</h2>
-                        <p class="text-xs text-slate-400">Daily performance matrix tracking execution outcomes and profitability</p>
+            <!-- =============================================================== -->
+            <!-- VIEW 2: EXECUTION LEDGER (TRADE LOG)                            -->
+            <!-- =============================================================== -->
+            <section id="view-ledger" class="view-section space-y-5">
+                <!-- Filter & Search Toolbar -->
+                <div class="saas-card rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="relative flex-1 max-w-md">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="ledger-search-input" onkeyup="renderLedgerTable()" placeholder="Search ticker, setup, session, violation..."
+                            class="w-full pl-10 pr-4 py-2 rounded-xl bg-obsidian border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60">
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeMonth(-1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08] cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                        <span id="calendar-month-title" class="font-mono text-sm font-bold text-white px-3">October 2026</span>
-                        <button onclick="changeMonth(1)" class="p-2 rounded-xl bg-surface hover:bg-surfaceHover border border-white/[0.08] cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="filter-result" onchange="renderLedgerTable()" class="px-3 py-2 rounded-xl bg-obsidian border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
+                            <option value="ALL">Result: All</option>
+                            <option value="Win">Win Only</option>
+                            <option value="Loss">Loss Only</option>
+                            <option value="Breakeven">Breakeven</option>
+                        </select>
+
+                        <select id="filter-session" onchange="renderLedgerTable()" class="px-3 py-2 rounded-xl bg-obsidian border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
+                            <option value="ALL">Session: All</option>
+                            <option value="NY">New York</option>
+                            <option value="London">London</option>
+                            <option value="Asia">Asia</option>
+                        </select>
+
+                        <select id="filter-adherence" onchange="renderLedgerTable()" class="px-3 py-2 rounded-xl bg-obsidian border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
+                            <option value="ALL">Discipline: All</option>
+                            <option value="Yes">A+ Adherent (Yes)</option>
+                            <option value="No">Violations (No)</option>
+                        </select>
+
+                        <button onclick="exportTradesCSV()" class="px-3 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-medium text-slate-200 flex items-center gap-1.5 transition cursor-pointer">
+                            <i data-lucide="download" class="w-3.5 h-3.5 text-cyan-400"></i>
+                            <span>Export CSV</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pro Data Grid -->
+                <div class="saas-card rounded-2xl overflow-hidden">
+                    <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
+                        <span class="text-xs font-medium text-slate-300">Click any row for execution telemetry inspection</span>
+                        <span id="ledger-showing-count" class="text-xs font-mono text-slate-400 tabular-nums">Showing 24 executions</span>
+                    </div>
+                    <div class="overflow-x-auto max-h-[620px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-[#090D16] border-b border-white/[0.08] text-[10px] font-mono uppercase tracking-wider text-slate-400 z-10">
+                                <tr>
+                                    <th class="py-3.5 px-4 cursor-pointer hover:text-white" onclick="sortLedger('id')">#</th>
+                                    <th class="py-3.5 px-4 cursor-pointer hover:text-white" onclick="sortLedger('date')">Date</th>
+                                    <th class="py-3.5 px-4 cursor-pointer hover:text-white" onclick="sortLedger('asset')">Asset</th>
+                                    <th class="py-3.5 px-4">Side</th>
+                                    <th class="py-3.5 px-4 cursor-pointer hover:text-white" onclick="sortLedger('setup')">Setup</th>
+                                    <th class="py-3.5 px-4">Session</th>
+                                    <th class="py-3.5 px-4 text-right cursor-pointer hover:text-white" onclick="sortLedger('riskAmount')">Risk</th>
+                                    <th class="py-3.5 px-4 text-center">Outcome</th>
+                                    <th class="py-3.5 px-4 text-right cursor-pointer hover:text-white" onclick="sortLedger('realizedR')">R-Mult</th>
+                                    <th class="py-3.5 px-4 text-right cursor-pointer hover:text-white" onclick="sortLedger('netPnL')">Net P&L</th>
+                                    <th class="py-3.5 px-4">Discipline</th>
+                                    <th class="py-3.5 px-4 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledger-full-tbody" class="divide-y divide-white/[0.05] text-xs font-mono tabular-nums">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =============================================================== -->
+            <!-- VIEW 3: EDGE & ATTRIBUTION MATRIX                               -->
+            <!-- =============================================================== -->
+            <section id="view-attribution" class="view-section space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-display font-bold text-lg text-white">Edge & Attribution Matrix</h2>
+                        <p class="text-xs text-slate-400">Isolate where your strategy generates positive expectancy vs. capital drag</p>
+                    </div>
+
+                    <!-- Segmented Grouping Control -->
+                    <div class="inline-flex p-1 rounded-xl bg-surface border border-white/[0.08] self-start">
+                        <button onclick="setAttributionGroup('setup')" id="attr-btn-setup" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.09] text-white transition cursor-pointer">Setup / Strategy</button>
+                        <button onclick="setAttributionGroup('direction')" id="attr-btn-direction" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer">Direction</button>
+                        <button onclick="setAttributionGroup('day')" id="attr-btn-day" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer">Day of Week</button>
+                        <button onclick="setAttributionGroup('session')" id="attr-btn-session" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer">Session</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-8 saas-card rounded-2xl p-5">
-                        <div class="grid grid-cols-7 gap-2 mb-2 text-center text-[11px] font-mono font-bold text-slate-500">
-                            <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+                    <!-- Attribution Table (7 cols) -->
+                    <div class="lg:col-span-7 saas-card rounded-2xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-white/[0.08] bg-[#090D16] text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                                        <th class="py-3.5 px-5">Segment</th>
+                                        <th class="py-3.5 px-3 text-right">Trades</th>
+                                        <th class="py-3.5 px-4">Win Rate</th>
+                                        <th class="py-3.5 px-3 text-right">PF</th>
+                                        <th class="py-3.5 px-3 text-right">Avg R</th>
+                                        <th class="py-3.5 px-5 text-right">Net P&L</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attribution-tbody" class="divide-y divide-white/[0.06] text-xs font-mono tabular-nums">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
                     </div>
-                    <div class="lg:col-span-4 saas-card rounded-2xl p-5 flex flex-col justify-between">
+
+                    <!-- Comparative Alpha vs Bleed Bar Chart (5 cols) -->
+                    <div class="lg:col-span-5 saas-card rounded-2xl p-5 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-display font-bold text-sm text-white mb-2">Selected Date Telemetry</h3>
-                            <div id="calendar-day-details" class="text-xs text-slate-400 font-mono">Select a calendar day to inspect trades.</div>
+                            <h3 class="font-display font-bold text-sm text-white">Net Alpha Attribution ($)</h3>
+                            <p class="text-xs text-slate-400 mb-4">Comparative dollar contribution by selected dimension</p>
                         </div>
-                        <button onclick="openExecutionModal()" class="w-full mt-4 py-2 rounded-xl bg-surfaceHover hover:bg-surface border border-white/[0.1] text-xs font-semibold text-white transition cursor-pointer">Log Trade on this Date</button>
+                        <div class="relative w-full h-64">
+                            <canvas id="attributionBarChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW 3: LEDGER -->
-            <section id="view-ledger" class="view-section space-y-4">
-                <div class="saas-card rounded-2xl overflow-hidden p-4">
-                    <table class="w-full text-left font-mono text-xs">
-                        <thead>
-                            <tr class="border-b border-white/[0.08] text-slate-400">
-                                <th class="py-3 px-4">Date</th>
-                                <th class="py-3 px-4">Asset</th>
-                                <th class="py-3 px-4">Direction</th>
-                                <th class="py-3 px-4 text-right">Net P&L</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ledger-tbody" class="divide-y divide-white/[0.05]"></tbody>
-                    </table>
+            <!-- =============================================================== -->
+            <!-- VIEW 4: DISCIPLINE & LEAK SIMULATOR                             -->
+            <!-- =============================================================== -->
+            <section id="view-discipline" class="view-section space-y-6">
+                <div>
+                    <h2 class="font-display font-bold text-lg text-white">Behavioral Risk & Leak Simulator</h2>
+                    <p class="text-xs text-slate-400">Quantifying the direct financial cost of unforced rule violations</p>
+                </div>
+
+                <!-- Split-Screen Diagnostic Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- A+ Rule Adherence (Yes) -->
+                    <div class="saas-card hero-glow-emerald rounded-2xl p-6 border-emerald-500/25">
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                                A+ RULE ADHERENCE (YES)
+                            </span>
+                            <span id="disc-yes-trades" class="font-mono text-xs text-slate-400 tabular-nums">0 Executions</span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono tabular-nums">
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Clean Net P&L</span>
+                                <span id="disc-yes-pnl" class="text-lg font-bold text-emerald-400">+$0</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Total R</span>
+                                <span id="disc-yes-r" class="text-lg font-bold text-white">+0.00R</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Win Rate</span>
+                                <span id="disc-yes-wr" class="text-lg font-bold text-emerald-400">0.0%</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Profit Factor</span>
+                                <span id="disc-yes-pf" class="text-lg font-bold text-cyan-400">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rule Violations (No) -->
+                    <div class="saas-card rounded-2xl p-6 border-rose-500/25" style="background: radial-gradient(120% 100% at 50% 0%, rgba(244, 63, 94, 0.1) 0%, rgba(13, 18, 29, 0) 70%), #0D121D;">
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                                <i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i>
+                                RULE VIOLATIONS (NO)
+                            </span>
+                            <span id="disc-no-trades" class="font-mono text-xs text-slate-400 tabular-nums">0 Executions</span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono tabular-nums mb-4">
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Capital Leaked</span>
+                                <span id="disc-no-pnl" class="text-lg font-bold text-rose-400">-$0</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">R Leaked</span>
+                                <span id="disc-no-r" class="text-lg font-bold text-rose-400">-0.00R</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-sans text-slate-400 block">Violation WR</span>
+                                <span id="disc-no-wr" class="text-lg font-bold text-slate-300">0.0%</span>
+                            </div>
+                        </div>
+                        <div id="violation-tag-breakdown" class="flex flex-wrap gap-2 pt-3 border-t border-white/[0.08]">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive "What-If" Clean Equity Simulator -->
+                <div class="saas-card hero-glow-indigo rounded-2xl p-6 border-indigo-500/30">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">WHAT-IF ENGINE</span>
+                                <h3 class="font-display font-bold text-base text-white">Simulated Zero-Violation Performance</h3>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Toggle off specific psychological leak tags below to simulate your equity curve without those mistakes</p>
+                        </div>
+                        <button onclick="resetSimulatorFilters()" class="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-xs font-mono text-slate-300 transition cursor-pointer self-start">
+                            Exclude All Violations
+                        </button>
+                    </div>
+
+                    <!-- Interactive Leak Filter Toggles -->
+                    <div id="simulator-toggle-pills" class="flex flex-wrap gap-2 mb-6">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono tabular-nums">
+                        <div class="p-4 rounded-xl bg-obsidian border border-white/[0.08]">
+                            <span class="text-xs font-sans text-slate-400">Actual Net P&L</span>
+                            <div id="sim-actual-pnl" class="text-xl font-bold text-slate-200 mt-1">+$0.00</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-obsidian border border-emerald-500/30">
+                            <span class="text-xs font-sans text-emerald-400">Simulated Clean P&L</span>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="sim-clean-pnl" class="text-xl font-bold text-emerald-400">+$0.00</span>
+                                <span id="sim-delta-pnl" class="text-xs text-emerald-300">(+$0.00)</span>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-obsidian border border-cyan-500/30">
+                            <span class="text-xs font-sans text-cyan-400">Simulated Win Rate & PF</span>
+                            <div class="flex items-baseline gap-3 mt-1">
+                                <span id="sim-clean-wr" class="text-xl font-bold text-white">0.0%</span>
+                                <span id="sim-clean-pf" class="text-xs text-cyan-300">PF: 0.00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- VIEW 4: AI CHATBOT -->
+            <!-- =============================================================== -->
+            <!-- VIEW 5: AI QUANT ANALYST                                        -->
+            <!-- =============================================================== -->
             <section id="view-ai" class="view-section space-y-6">
-                <div class="saas-card rounded-2xl p-5 flex flex-col h-[600px]">
-                    <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
                         <div class="flex items-center gap-2">
-                            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
-                            <h3 class="font-display font-bold text-sm text-white">QuantEdge AI Quant Coach</h3>
+                            <h2 class="font-display font-bold text-lg text-white">AI Quantitative Risk & Edge Analyst</h2>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">ALGORITHMIC AUDIT</span>
                         </div>
-                        <span class="text-xs font-mono text-emerald-400">Online & Synchronized</span>
-                    </div>
-                    
-                    <div id="chat-messages" class="flex-1 overflow-y-auto py-4 space-y-4 font-mono text-xs">
-                        <div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">
-                            Hello. I am your AI Quant Coach. I have loaded your live trading telemetry and execution ledger. Ask me anything about your win rate, setup performance, or risk leaks.
-                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">Automated statistical diagnostics prioritized by expectancy impact</p>
                     </div>
 
-                    <div class="pt-4 border-t border-white/[0.08] flex gap-2">
-                        <input type="text" id="chat-input" placeholder="Ask AI about your trading edge..." class="flex-1 bg-obsidian border border-white/[0.1] rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none">
-                        <button onclick="sendChatMessage()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition cursor-pointer">Send</button>
+                    <button onclick="copyFullStatisticalPrompt()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-slate-950 font-semibold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition cursor-pointer self-start">
+                        <i data-lucide="copy" class="w-4 h-4 stroke-[2.2]"></i>
+                        <span>Copy Full Statistical Prompt for LLM</span>
+                    </button>
+                </div>
+
+                <!-- Prioritized Recommendations Grid -->
+                <div id="ai-recommendations-container" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Live Formatted Markdown Preview Box -->
+                <div class="saas-card rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Generated LLM Quantitative Prompt Payload</span>
+                        <span class="text-[11px] font-mono text-slate-500">Ready for Claude / GPT-4 / Gemini</span>
                     </div>
+                    <pre id="llm-prompt-preview" class="p-4 rounded-xl bg-obsidian border border-white/[0.08] text-xs font-mono text-slate-300 overflow-x-auto max-h-72 leading-relaxed"></pre>
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- MODAL -->
-    <div id="execution-modal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
-        <div class="saas-card rounded-2xl max-w-md w-full p-6 space-y-4">
-            <h3 class="font-display font-bold text-sm text-white">Log Trade Execution</h3>
-            <form onsubmit="submitTrade(event)" class="space-y-3 font-mono text-xs">
-                <input type="date" id="inp-date" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
-                <input type="text" id="inp-asset" placeholder="Asset (e.g. EUR/USD, NQ)" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
-                <select id="inp-result" class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
-                    <option value="Win">Win</option>
-                    <option value="Loss">Loss</option>
-                    <option value="Breakeven">Breakeven</option>
-                </select>
-                <input type="number" id="inp-pnl" placeholder="Net P&L ($)" required class="w-full bg-obsidian border border-white/[0.1] p-2 rounded-xl text-white">
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeExecutionModal()" class="px-4 py-2 bg-white/[0.05] rounded-xl cursor-pointer">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl cursor-pointer">Save</button>
+    <!-- ===================================================================== -->
+    <!-- MODAL: + LOG EXECUTION (SHORTCUT: N OR CMD+K)                         -->
+    <!-- ===================================================================== -->
+    <div id="execution-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="saas-card rounded-2xl max-w-lg w-full p-6 border-white/[0.14] shadow-2xl animate-[fadeSlideIn_0.2s_ease-out]">
+            <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-sm text-white">Log Trade Execution</h3>
+                        <p class="text-[11px] text-slate-400">Auto-computes R-multiples, weekday & equity impact</p>
+                    </div>
+                </div>
+                <button onclick="closeExecutionModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <form id="log-execution-form" onsubmit="submitNewExecution(event)" class="mt-4 space-y-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Date</label>
+                        <input type="date" id="inp-date" required class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Ticker / Asset</label>
+                        <input type="text" id="inp-asset" placeholder="NQ, EUR/USD" required class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white uppercase focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Session</label>
+                        <select id="inp-session" class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                            <option value="NY">NY</option>
+                            <option value="London">London</option>
+                            <option value="Asia">Asia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Segmented Direction & Setup -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Direction</label>
+                        <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-obsidian border border-white/[0.1]">
+                            <button type="button" id="seg-dir-long" onclick="setFormDirection('Long')" class="py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-pointer">LONG</button>
+                            <button type="button" id="seg-dir-short" onclick="setFormDirection('Short')" class="py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer">SHORT</button>
+                        </div>
+                        <input type="hidden" id="inp-direction" value="Long">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Setup / Playbook</label>
+                        <input type="text" id="inp-setup" list="setup-suggestions" placeholder="Breakout" required class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                        <datalist id="setup-suggestions">
+                            <option value="Breakout">
+                            <option value="Pullback">
+                            <option value="Trend Continuation">
+                            <option value="Mean Reversion">
+                            <option value="ORB Reversal">
+                        </datalist>
+                    </div>
+                </div>
+
+                <!-- Segmented Outcome -->
+                <div>
+                    <label class="block text-[11px] font-mono text-slate-400 mb-1">Trade Outcome</label>
+                    <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-obsidian border border-white/[0.1]">
+                        <button type="button" id="seg-res-win" onclick="setFormResult('Win')" class="py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-pointer">WIN</button>
+                        <button type="button" id="seg-res-loss" onclick="setFormResult('Loss')" class="py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer">LOSS</button>
+                        <button type="button" id="seg-res-be" onclick="setFormResult('Breakeven')" class="py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer">BREAKEVEN</button>
+                    </div>
+                    <input type="hidden" id="inp-result" value="Win">
+                </div>
+
+                <!-- Risk, Planned RR, Net P&L & Auto R -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Risk ($)</label>
+                        <input type="number" id="inp-risk" value="200" min="1" step="1" required oninput="autoCalculateFormR()" class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white tabular-nums focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Net P&L ($)</label>
+                        <input type="number" id="inp-pnl" value="500" step="0.01" required oninput="autoCalculateFormR()" class="w-full rounded-xl bg-obsidian border border-white/[0.1] px-3 py-2 text-xs font-mono text-white tabular-nums focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-mono text-slate-400 mb-1">Realized R</label>
+                        <input type="number" id="inp-realized-r" value="2.50" step="0.01" required class="w-full rounded-xl bg-surfaceHover border border-white/[0.1] px-3 py-2 text-xs font-mono font-bold text-cyan-400 tabular-nums focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Rule Adherence Toggle & Conditional Violation Reason -->
+                <div class="pt-2 border-t border-white/[0.08] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-medium text-slate-300">Followed Trading Plan Rules?</label>
+                        <div class="inline-flex p-1 rounded-xl bg-obsidian border border-white/[0.1]">
+                            <button type="button" id="seg-adh-yes" onclick="setFormAdherence('Yes')" class="px-3 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-400 cursor-pointer">YES</button>
+                            <button type="button" id="seg-adh-no" onclick="setFormAdherence('No')" class="px-3 py-1 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer">NO</button>
+                        </div>
+                        <input type="hidden" id="inp-adherence" value="Yes">
+                    </div>
+
+                    <div id="violation-reason-wrapper" class="hidden">
+                        <label class="block text-[11px] font-mono text-rose-400 mb-1">Violation Classification</label>
+                        <select id="inp-violation-reason" class="w-full rounded-xl bg-obsidian border border-rose-500/40 px-3 py-2 text-xs font-mono text-rose-200 focus:outline-none">
+                            <option value="FOMO Entry">FOMO Entry (Chased Price)</option>
+                            <option value="Moved Stop Loss">Moved Stop Loss</option>
+                            <option value="Early Exit">Early Exit (Cut Winner)</option>
+                            <option value="Revenge Trade">Revenge Trade</option>
+                            <option value="Overleveraged">Overleveraged Position</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2.5 pt-3">
+                    <button type="button" onclick="closeExecutionModal()" class="px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-xs font-medium text-slate-300 transition cursor-pointer">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-semibold text-xs shadow-lg shadow-emerald-500/20 transition cursor-pointer">Commit Execution</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script>
-        let trades = [
-            { id: 1, date: '2026-10-05', asset: 'NQ', direction: 'Long', result: 'Win', netPnL: 650 },
-            { id: 2, date: '2026-10-06', asset: 'EUR/USD', direction: 'Short', result: 'Loss', netPnL: -250 },
-            { id: 3, date: '2026-10-07', asset: 'NVDA', direction: 'Long', result: 'Win', netPnL: 775 }
-        ];
-        let currentMonth = 9; // October (0-indexed)
-        let currentYear = 2026;
+    <!-- ===================================================================== -->
+    <!-- SLIDE-OVER DRAWER: BULK CSV IMPORTER / EXPORTER & TRADE INSPECTOR     -->
+    <!-- ===================================================================== -->
+    <div id="csv-drawer-backdrop" onclick="closeCsvDrawer()" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm"></div>
+    <aside id="csv-drawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-lg bg-[#090D16] border-l border-white/[0.1] p-6 transform translate-x-full transition-transform duration-300 ease-expo-out flex flex-col justify-between">
+        <div class="space-y-4 overflow-y-auto pr-1">
+            <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                <div>
+                    <h3 class="font-display font-bold text-base text-white">Bulk CSV / Data Ingestion</h3>
+                    <p class="text-xs text-slate-400">Paste CSV or pipe-delimited logs to update all analytics live</p>
+                </div>
+                <button onclick="closeCsvDrawer()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
 
-        window.onload = () => {
+            <div class="flex items-center gap-2">
+                <button onclick="exportTradesCSV()" class="px-3 py-1.5 rounded-lg bg-surface hover:bg-surfaceHover border border-white/[0.1] text-xs font-mono text-cyan-400 flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Download .CSV
+                </button>
+                <button onclick="resetDemoData()" class="px-3 py-1.5 rounded-lg bg-surface hover:bg-surfaceHover border border-white/[0.1] text-xs font-mono text-amber-400 flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Load 24 Institutional Trades
+                </button>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-mono text-slate-400 mb-1.5">CSV / Pipe-Delimited Dataset</label>
+                <textarea id="bulk-csv-textarea" rows="15" class="w-full rounded-xl bg-obsidian border border-white/[0.1] p-3.5 text-[11px] font-mono text-slate-300 leading-relaxed focus:outline-none focus:border-cyan-500"></textarea>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/[0.08] flex items-center justify-end gap-3">
+            <button onclick="closeCsvDrawer()" class="px-4 py-2 rounded-xl bg-white/[0.05] text-xs font-medium text-slate-300 hover:text-white cursor-pointer">Close</button>
+            <button onclick="importBulkCSV()" class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs shadow-lg shadow-cyan-500/20 cursor-pointer">Parse & Sync Dataset</button>
+        </div>
+    </aside>
+
+    <!-- ===================================================================== -->
+    <!-- SLIDE-OVER DRAWER: QUICK EXECUTION INSPECTOR                          -->
+    <!-- ===================================================================== -->
+    <div id="inspector-backdrop" onclick="closeInspector()" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs"></div>
+    <aside id="inspector-drawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-[#090D16] border-l border-white/[0.1] p-6 transform translate-x-full transition-transform duration-300 ease-expo-out flex flex-col justify-between">
+        <div id="inspector-content" class="space-y-5"></div>
+        <div class="pt-4 border-t border-white/[0.08] flex justify-between">
+            <button id="inspector-delete-btn" class="px-4 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-mono font-semibold text-rose-400 cursor-pointer">Delete Execution</button>
+            <button onclick="closeInspector()" class="px-4 py-2 rounded-xl bg-white/[0.06] text-xs font-medium text-slate-200 cursor-pointer">Close</button>
+        </div>
+    </aside>
+
+    <script>
+        // =========================================================================
+        // 1. INSTITUTIONAL DATASET (24 DIVERSE EXECUTIONS) & LOCALSTORAGE STATE
+        // =========================================================================
+        const STORAGE_KEY = 'quantedge_pro_trades_v1';
+        const BALANCE_KEY = 'quantedge_pro_balance_v1';
+
+        const DEFAULT_TRADES = [
+            { id: 1, date: '2026-10-05', day: 'Mon', session: 'NY', asset: 'NQ', direction: 'Long', setup: 'Breakout', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 650, realizedR: 2.60, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 2, date: '2026-10-05', day: 'Mon', session: 'London', asset: 'EUR/USD', direction: 'Short', setup: 'Pullback', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -250, realizedR: -1.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 3, date: '2026-10-06', day: 'Tue', session: 'NY', asset: 'NVDA', direction: 'Long', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 3.0, result: 'Win', netPnL: 775, realizedR: 3.10, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 4, date: '2026-10-07', day: 'Wed', session: 'Asia', asset: 'GBP/JPY', direction: 'Long', setup: 'Mean Reversion', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -250, realizedR: -1.00, ruleAdherence: 'No', violationReason: 'FOMO Entry' },
+            { id: 5, date: '2026-10-07', day: 'Wed', session: 'NY', asset: 'ES', direction: 'Short', setup: 'Breakout', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 600, realizedR: 2.40, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 6, date: '2026-10-08', day: 'Thu', session: 'London', asset: 'XAU/USD', direction: 'Long', setup: 'Pullback', riskAmount: 250, plannedRR: 2.0, result: 'Breakeven', netPnL: 0, realizedR: 0.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 7, date: '2026-10-08', day: 'Thu', session: 'NY', asset: 'BTC/USD', direction: 'Long', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 3.0, result: 'Win', netPnL: 800, realizedR: 3.20, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 8, date: '2026-10-09', day: 'Fri', session: 'NY', asset: 'TSLA', direction: 'Short', setup: 'Mean Reversion', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -350, realizedR: -1.40, ruleAdherence: 'No', violationReason: 'Moved Stop Loss' },
+            { id: 9, date: '2026-10-12', day: 'Mon', session: 'London', asset: 'EUR/USD', direction: 'Long', setup: 'Pullback', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 550, realizedR: 2.20, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 10, date: '2026-10-13', day: 'Tue', session: 'NY', asset: 'NQ', direction: 'Long', setup: 'Breakout', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 625, realizedR: 2.50, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 11, date: '2026-10-14', day: 'Wed', session: 'Asia', asset: 'SOL/USD', direction: 'Short', setup: 'Mean Reversion', riskAmount: 250, plannedRR: 1.8, result: 'Loss', netPnL: -250, realizedR: -1.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 12, date: '2026-10-14', day: 'Wed', session: 'NY', asset: 'NVDA', direction: 'Long', setup: 'Breakout', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -250, realizedR: -1.00, ruleAdherence: 'No', violationReason: 'FOMO Entry' },
+            { id: 13, date: '2026-10-15', day: 'Thu', session: 'London', asset: 'GBP/JPY', direction: 'Short', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 675, realizedR: 2.70, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 14, date: '2026-10-15', day: 'Thu', session: 'NY', asset: 'ES', direction: 'Long', setup: 'Pullback', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 575, realizedR: 2.30, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 15, date: '2026-10-16', day: 'Fri', session: 'NY', asset: 'NQ', direction: 'Short', setup: 'Mean Reversion', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -275, realizedR: -1.10, ruleAdherence: 'No', violationReason: 'Revenge Trade' },
+            { id: 16, date: '2026-10-19', day: 'Mon', session: 'NY', asset: 'XAU/USD', direction: 'Long', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 3.0, result: 'Win', netPnL: 725, realizedR: 2.90, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 17, date: '2026-10-20', day: 'Tue', session: 'London', asset: 'EUR/USD', direction: 'Short', setup: 'Breakout', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -250, realizedR: -1.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 18, date: '2026-10-21', day: 'Wed', session: 'NY', asset: 'BTC/USD', direction: 'Long', setup: 'Pullback', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 600, realizedR: 2.40, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 19, date: '2026-10-22', day: 'Thu', session: 'NY', asset: 'NQ', direction: 'Long', setup: 'Breakout', riskAmount: 250, plannedRR: 2.5, result: 'Breakeven', netPnL: 0, realizedR: 0.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 20, date: '2026-10-23', day: 'Fri', session: 'Asia', asset: 'GBP/JPY', direction: 'Short', setup: 'Mean Reversion', riskAmount: 250, plannedRR: 2.0, result: 'Loss', netPnL: -300, realizedR: -1.20, ruleAdherence: 'No', violationReason: 'Overleveraged' },
+            { id: 21, date: '2026-10-26', day: 'Mon', session: 'NY', asset: 'SOL/USD', direction: 'Long', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 3.0, result: 'Win', netPnL: 750, realizedR: 3.00, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 22, date: '2026-10-27', day: 'Tue', session: 'London', asset: 'XAU/USD', direction: 'Long', setup: 'Breakout', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 525, realizedR: 2.10, ruleAdherence: 'Yes', violationReason: 'None' },
+            { id: 23, date: '2026-10-28', day: 'Wed', session: 'NY', asset: 'TSLA', direction: 'Long', setup: 'Pullback', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 225, realizedR: 0.90, ruleAdherence: 'No', violationReason: 'Early Exit' },
+            { id: 24, date: '2026-10-29', day: 'Thu', session: 'NY', asset: 'ES', direction: 'Short', setup: 'Trend Continuation', riskAmount: 250, plannedRR: 2.5, result: 'Win', netPnL: 625, realizedR: 2.50, ruleAdherence: 'Yes', violationReason: 'None' }
+        ];
+
+        let trades = [];
+        let startingBalance = 10000;
+        let mainChartMode = 'equity';
+        let mainChartInstance = null;
+        let attrBarChartInstance = null;
+        let attributionGroup = 'setup';
+        let ledgerSort = { key: 'id', asc: false };
+        let excludedViolationsInSim = new Set();
+        let currentPromptPayload = '';
+
+        // =========================================================================
+        // 2. INITIALIZATION & KEYBOARD SHORTCUTS
+        // =========================================================================
+        window.onload = function () {
             lucide.createIcons();
-            refreshApp();
+            loadFromStorage();
             document.getElementById('inp-date').valueAsDate = new Date();
+            refreshAllViews();
+
+            // Global Keyboard Shortcuts (N or Cmd/Ctrl + K to Log Execution, Esc to close modals)
+            document.addEventListener('keydown', (e) => {
+                const tag = document.activeElement.tagName.toLowerCase();
+                const isInput = tag === 'input' || tag === 'textarea' || tag === 'select';
+
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    openExecutionModal();
+                } else if (!isInput && e.key.toLowerCase() === 'n') {
+                    e.preventDefault();
+                    openExecutionModal();
+                } else if (e.key === 'Escape') {
+                    closeExecutionModal();
+                    closeCsvDrawer();
+                    closeInspector();
+                }
+            });
+        };
+
+        function loadFromStorage() {
+            const savedTrades = localStorage.getItem(STORAGE_KEY);
+            const savedBal = localStorage.getItem(BALANCE_KEY);
+            if (savedTrades) {
+                try {
+                    trades = JSON.parse(savedTrades);
+                } catch {
+                    trades = [...DEFAULT_TRADES];
+                }
+            } else {
+                trades = [...DEFAULT_TRADES];
+            }
+
+            if (savedBal) {
+                startingBalance = parseFloat(savedBal) || 10000;
+                document.getElementById('starting-balance-input').value = startingBalance;
+            }
+            excludedViolationsInSim = new Set(trades.filter(t => t.ruleAdherence === 'No').map(t => t.violationReason));
+        }
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+            localStorage.setItem(BALANCE_KEY, String(startingBalance));
+        }
+
+        function updateStartingBalance() {
+            startingBalance = parseFloat(document.getElementById('starting-balance-input').value) || 10000;
+            saveToStorage();
+            refreshAllViews();
+            showToast(`Base capital updated to $${startingBalance.toLocaleString()}`);
+        }
+
+        function resetDemoData() {
+            trades = JSON.parse(JSON.stringify(DEFAULT_TRADES));
+            startingBalance = 10000;
+            document.getElementById('starting-balance-input').value = 10000;
+            excludedViolationsInSim = new Set(trades.filter(t => t.ruleAdherence === 'No').map(t => t.violationReason));
+            saveToStorage();
+            refreshAllViews();
+            syncCsvTextarea();
+            showToast('Restored 24 institutional demo executions.');
+        }
+
+        // =========================================================================
+        // 3. NAVIGATION & UI CONTROLS
+        // =========================================================================
+        const VIEW_META = {
+            overview: { title: 'Executive Overview', sub: 'Real-time statistical edge, equity curve telemetry & risk attribution' },
+            ledger: { title: 'Execution Ledger', sub: 'Searchable institutional trade log with inline inspection & CSV sync' },
+            attribution: { title: 'Edge & Attribution Matrix', sub: 'Segmented expectancy & profit factor analysis across dimensions' },
+            discipline: { title: 'Discipline & Leak Simulator', sub: 'Behavioral risk audit & zero-violation equity curve simulation' },
+            ai: { title: 'AI Quant Analyst', sub: 'Algorithmic performance diagnostics & LLM prompt engineering' }
         };
 
         function switchView(viewId) {
-            ['overview', 'calendar', 'ledger', 'ai'].forEach(v => {
+            ['overview', 'ledger', 'attribution', 'discipline', 'ai'].forEach(v => {
                 document.getElementById(`view-${v}`).classList.remove('active');
-                const btn = document.getElementById(`side-nav-${v}`);
-                if (btn) btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer';
+                const sideBtn = document.getElementById(`side-nav-${v}`);
+                if (sideBtn) {
+                    sideBtn.className = 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer';
+                }
+                const mobBtn = document.getElementById(`mob-nav-${v}`);
+                if (mobBtn) mobBtn.className = 'flex flex-col items-center gap-1 py-1 px-2 text-slate-400';
             });
+
             document.getElementById(`view-${viewId}`).classList.add('active');
-            const activeBtn = document.getElementById(`side-nav-${viewId}`);
-            if (activeBtn) activeBtn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.07] text-white transition cursor-pointer';
-            if (viewId === 'calendar') renderCalendar();
+            const activeSide = document.getElementById(`side-nav-${viewId}`);
+            if (activeSide) {
+                activeSide.className = 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium bg-white/[0.08] text-white border border-white/[0.09] transition cursor-pointer';
+            }
+            const activeMob = document.getElementById(`mob-nav-${viewId}`);
+            if (activeMob) activeMob.className = 'flex flex-col items-center gap-1 py-1 px-2 text-cyan-400';
+
+            document.getElementById('header-view-title').textContent = VIEW_META[viewId].title;
+            document.getElementById('header-view-subtitle').textContent = VIEW_META[viewId].sub;
+
+            if (viewId === 'overview' && mainChartInstance) mainChartInstance.resize();
+            if (viewId === 'attribution' && attrBarChartInstance) attrBarChartInstance.resize();
         }
 
-        function refreshApp() {
-            let netPnl = trades.reduce((a, b) => a + b.netPnL, 0);
-            let wins = trades.filter(t => t.result === 'Win').length;
-            let winRate = trades.length > 0 ? (wins / trades.length) * 100 : 0;
-            
-            document.getElementById('hero-net-pnl').textContent = `$${netPnl.toFixed(2)}`;
-            document.getElementById('hero-win-rate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('hero-pf-val').textContent = "2.14";
-
-            document.getElementById('ledger-tbody').innerHTML = trades.map(t => `
-                <tr>
-                    <td class="py-3 px-4">${t.date}</td>
-                    <td class="py-3 px-4 font-bold text-white">${t.asset}</td>
-                    <td class="py-3 px-4 text-emerald-400">${t.direction}</td>
-                    <td class="py-3 px-4 text-right font-bold ${t.netPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}">$${t.netPnL}</td>
-                </tr>
-            `).join('');
-            renderCalendar();
+        function toggleSidebar() {
+            const sb = document.getElementById('desktop-sidebar');
+            const labels = sb.querySelectorAll('.sidebar-label');
+            const isCollapsed = sb.classList.contains('w-20');
+            if (isCollapsed) {
+                sb.classList.remove('w-20');
+                sb.classList.add('w-64');
+                labels.forEach(l => l.classList.remove('hidden'));
+            } else {
+                sb.classList.remove('w-64');
+                sb.classList.add('w-20');
+                labels.forEach(l => l.classList.add('hidden'));
+            }
         }
 
-        function renderCalendar() {
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            document.getElementById('calendar-month-title').textContent = `${months[currentMonth]} ${currentYear}`;
+        function showToast(msg, variant = 'success') {
+            const stack = document.getElementById('toast-stack');
+            const el = document.createElement('div');
+            const colorMap = {
+                success: 'border-emerald-500/40 text-emerald-300',
+                info: 'border-cyan-500/40 text-cyan-300',
+                warn: 'border-amber-500/40 text-amber-300'
+            };
+            el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl bg-[#0D121D] border ${colorMap[variant] || colorMap.success} shadow-2xl text-xs font-medium transition-all duration-300 translate-y-2 opacity-0`;
+            el.innerHTML = `<span class="w-2 h-2 rounded-full bg-current"></span><span>${msg}</span>`;
+            stack.appendChild(el);
+            requestAnimationFrame(() => el.classList.remove('translate-y-2', 'opacity-0'));
+            setTimeout(() => {
+                el.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
 
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        // =========================================================================
+        // 4. STATISTICAL COMPUTATION ENGINE
+        // =========================================================================
+        function computeStats(dataset) {
+            const total = dataset.length;
+            const wins = dataset.filter(t => t.result === 'Win');
+            const losses = dataset.filter(t => t.result === 'Loss');
+            const bes = dataset.filter(t => t.result === 'Breakeven');
 
-            for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-                grid.innerHTML += `<div class="h-24 bg-surface/30 rounded-xl opacity-30"></div>`;
+            const wCount = wins.length;
+            const lCount = losses.length;
+            const beCount = bes.length;
+            const decided = wCount + lCount;
+
+            const winRateExclBE = decided > 0 ? (wCount / decided) * 100 : 0;
+            const winRateGross = total > 0 ? (wCount / total) * 100 : 0;
+            const lossRateExclBE = decided > 0 ? (lCount / decided) : 0;
+
+            const grossProfit = wins.reduce((acc, t) => acc + Math.max(0, t.netPnL), 0);
+            const grossLoss = Math.abs(losses.reduce((acc, t) => acc + Math.min(0, t.netPnL), 0));
+            const netPnL = dataset.reduce((acc, t) => acc + t.netPnL, 0);
+            const totalR = dataset.reduce((acc, t) => acc + t.realizedR, 0);
+
+            const avgWinDollar = wCount > 0 ? grossProfit / wCount : 0;
+            const avgLossDollar = lCount > 0 ? grossLoss / lCount : 0;
+            const avgWinR = wCount > 0 ? wins.reduce((acc, t) => acc + t.realizedR, 0) / wCount : 0;
+            const avgLossR = lCount > 0 ? Math.abs(losses.reduce((acc, t) => acc + t.realizedR, 0)) / lCount : 0;
+
+            const realizedRR = avgLossDollar > 0 ? avgWinDollar / avgLossDollar : (avgWinDollar > 0 ? avgWinDollar : 0);
+            const avgPlannedRR = total > 0 ? dataset.reduce((acc, t) => acc + (t.plannedRR || 2), 0) / total : 0;
+            const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? Infinity : 0);
+
+            const wrDec = winRateExclBE / 100;
+            const expectancyDollar = (wrDec * avgWinDollar) - (lossRateExclBE * avgLossDollar);
+            const expectancyR = (wrDec * avgWinR) - (lossRateExclBE * avgLossR);
+
+            // Equity Curve, Drawdown & Streaks
+            let equity = startingBalance;
+            let peakEquity = startingBalance;
+            let maxDdDollar = 0;
+            let maxDdPct = 0;
+            let cumPnL = 0;
+            let peakCumPnL = 0;
+            let cumR = 0;
+
+            const equityPoints = [0];
+            const rPoints = [0];
+            const underwaterPoints = [0];
+
+            let maxWinStreak = 0, maxLossStreak = 0, curW = 0, curL = 0;
+
+            dataset.forEach(t => {
+                equity += t.netPnL;
+                cumPnL += t.netPnL;
+                cumR += t.realizedR;
+
+                if (equity > peakEquity) peakEquity = equity;
+                const ddDollar = peakEquity - equity;
+                const ddPct = peakEquity > 0 ? (ddDollar / peakEquity) * 100 : 0;
+                if (ddDollar > maxDdDollar) maxDdDollar = ddDollar;
+                if (ddPct > maxDdPct) maxDdPct = ddPct;
+
+                if (cumPnL > peakCumPnL) peakCumPnL = cumPnL;
+                underwaterPoints.push(-(peakCumPnL - cumPnL));
+                equityPoints.push(cumPnL);
+                rPoints.push(parseFloat(cumR.toFixed(2)));
+
+                if (t.result === 'Win') {
+                    curW++; curL = 0;
+                    if (curW > maxWinStreak) maxWinStreak = curW;
+                } else if (t.result === 'Loss') {
+                    curL++; curW = 0;
+                    if (curL > maxLossStreak) maxLossStreak = curL;
+                }
+            });
+
+            const currentDdDollar = peakEquity - equity;
+            const currentStreak = curW > 0 ? `${curW}W Active` : (curL > 0 ? `${curL}L Active` : 'Neutral');
+
+            return {
+                total, wCount, lCount, beCount, winRateExclBE, winRateGross,
+                grossProfit, grossLoss, netPnL, totalR, avgWinDollar, avgLossDollar,
+                avgWinR, avgLossR, realizedRR, avgPlannedRR, profitFactor,
+                expectancyDollar, expectancyR, maxDdDollar, maxDdPct, currentDdDollar,
+                maxWinStreak, maxLossStreak, currentStreak, equityPoints, rPoints, underwaterPoints
+            };
+        }
+
+        function fmtMoney(val, plus = true) {
+            const abs = Math.abs(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (val > 0) return `${plus ? '+' : ''}$${abs}`;
+            if (val < 0) return `-$${abs}`;
+            return '$0.00';
+        }
+
+        function fmtR(val, plus = true) {
+            const abs = Math.abs(val).toFixed(2);
+            if (val > 0) return `${plus ? '+' : ''}${abs}R`;
+            if (val < 0) return `-${abs}R`;
+            return '0.00R';
+        }
+
+        // =========================================================================
+        // 5. MASTER REFRESH PIPELINE
+        // =========================================================================
+        function refreshAllViews() {
+            const stats = computeStats(trades);
+            const currentEquity = startingBalance + stats.netPnL;
+            const roiPct = startingBalance > 0 ? (stats.netPnL / startingBalance) * 100 : 0;
+
+            // Sidebar Live Equity Pill
+            document.getElementById('sidebar-equity-val').textContent = fmtMoney(currentEquity, false);
+            const roiBadge = document.getElementById('sidebar-roi-badge');
+            roiBadge.textContent = `${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(2)}%`;
+            roiBadge.className = `font-mono text-[10px] font-semibold tabular-nums ${roiPct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+            document.getElementById('sidebar-trade-count').textContent = stats.total;
+
+            // Hero 1: Net P&L & ROI
+            const heroPnl = document.getElementById('hero-net-pnl');
+            heroPnl.textContent = fmtMoney(stats.netPnL);
+            heroPnl.className = `font-mono font-bold text-2xl sm:text-3xl tabular-nums tracking-tight ${stats.netPnL >= 0 ? 'text-white' : 'text-rose-400'}`;
+            const heroRoi = document.getElementById('hero-roi-pill');
+            heroRoi.textContent = `${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(2)}% ROI`;
+            heroRoi.className = `px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold tabular-nums border ${roiPct >= 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : 'bg-rose-500/15 text-rose-400 border-rose-500/25'}`;
+            document.getElementById('hero-total-r').textContent = fmtR(stats.totalR);
+            document.getElementById('hero-total-count').textContent = stats.total;
+            renderMiniSparkline(stats.equityPoints);
+
+            // Hero 2: Profit Factor & Radial Ring
+            const pfVal = stats.profitFactor === Infinity ? '∞' : stats.profitFactor.toFixed(2);
+            document.getElementById('hero-pf-val').textContent = pfVal;
+            const pfBadge = document.getElementById('hero-pf-badge');
+            if (stats.profitFactor >= 1.5) {
+                pfBadge.textContent = 'INSTITUTIONAL > 1.5';
+                pfBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25';
+            } else {
+                pfBadge.textContent = 'SUB-OPTIMAL < 1.5';
+                pfBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/25';
+            }
+            const ringPct = Math.min(1, (stats.profitFactor === Infinity ? 3 : stats.profitFactor) / 3.0);
+            document.getElementById('hero-pf-ring').style.strokeDashoffset = 113.1 * (1 - ringPct);
+            document.getElementById('hero-gross-win').textContent = fmtMoney(stats.grossProfit);
+            document.getElementById('hero-gross-loss').textContent = `-$${Math.abs(stats.grossLoss).toFixed(0)}`;
+
+            // Hero 3: Win Rate & W/L/BE Segmented Bar
+            document.getElementById('hero-win-rate').textContent = `${stats.winRateExclBE.toFixed(1)}%`;
+            document.getElementById('hero-gross-wr').textContent = `Gross: ${stats.winRateGross.toFixed(1)}%`;
+            document.getElementById('hero-wlbe-text').textContent = `${stats.wCount}W • ${stats.lCount}L • ${stats.beCount}BE`;
+            const wPct = stats.total > 0 ? (stats.wCount / stats.total) * 100 : 0;
+            const bePct = stats.total > 0 ? (stats.beCount / stats.total) * 100 : 0;
+            const lPct = stats.total > 0 ? (stats.lCount / stats.total) * 100 : 0;
+            document.getElementById('bar-seg-win').style.width = `${wPct}%`;
+            document.getElementById('bar-seg-be').style.width = `${bePct}%`;
+            document.getElementById('bar-seg-loss').style.width = `${lPct}%`;
+
+            // Hero 4: Expectancy
+            const expEl = document.getElementById('hero-exp-dollar');
+            expEl.textContent = fmtMoney(stats.expectancyDollar);
+            expEl.className = `font-mono font-bold text-2xl sm:text-3xl tabular-nums ${stats.expectancyDollar >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+            document.getElementById('hero-exp-r').textContent = `(${fmtR(stats.expectancyR)})`;
+
+            // Secondary Strip
+            document.getElementById('sec-realized-rr').textContent = `${stats.realizedRR.toFixed(2)} : 1`;
+            document.getElementById('sec-planned-rr').textContent = `Plan: 1:${stats.avgPlannedRR.toFixed(1)}`;
+            const rrShare = (stats.avgWinDollar + stats.avgLossDollar) > 0 ? (stats.avgWinDollar / (stats.avgWinDollar + stats.avgLossDollar)) * 100 : 50;
+            document.getElementById('rr-ratio-bar').style.width = `${rrShare}%`;
+
+            document.getElementById('sec-dd-dollar').textContent = `-${fmtMoney(stats.maxDdDollar, false)}`;
+            document.getElementById('sec-dd-pct').textContent = `(-${stats.maxDdPct.toFixed(2)}%)`;
+            const ddStat = document.getElementById('sec-dd-status');
+            if (stats.currentDdDollar <= 0.01) {
+                ddStat.textContent = 'AT EQUITY PEAK';
+                ddStat.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/15 text-emerald-400';
+            } else {
+                ddStat.textContent = `-${fmtMoney(stats.currentDdDollar, false)} FROM PEAK`;
+                ddStat.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/15 text-amber-400';
             }
 
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayTrades = trades.filter(t => t.date === dateStr);
-                const dayPnl = dayTrades.reduce((a, b) => a + b.netPnL, 0);
-                
-                let bgClass = 'bg-surface border-white/[0.05]';
-                if (dayTrades.length > 0) {
-                    bgClass = dayPnl >= 0 ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/15 border-rose-500/30 text-rose-300';
-                }
+            document.getElementById('sec-avg-win-d').textContent = fmtMoney(stats.avgWinDollar);
+            document.getElementById('sec-avg-win-r').textContent = fmtR(stats.avgWinR);
+            document.getElementById('sec-avg-loss-d').textContent = `-${fmtMoney(stats.avgLossDollar, false)}`;
+            document.getElementById('sec-avg-loss-r').textContent = `-${stats.avgLossR.toFixed(2)}R`;
 
-                grid.innerHTML += `
-                    <div onclick="inspectCalendarDate('${dateStr}')" class="h-24 rounded-xl border ${bgClass} p-2 flex flex-col justify-between cursor-pointer hover:border-cyan-400 transition">
-                        <span class="font-mono text-xs font-bold">${day}</span>
-                        ${dayTrades.length > 0 ? `<span class="font-mono text-[10px] font-bold">$${dayPnl}</span>` : ''}
+            document.getElementById('sec-max-win-streak').textContent = `${stats.maxWinStreak}W`;
+            document.getElementById('sec-max-loss-streak').textContent = `${stats.maxLossStreak}L`;
+            document.getElementById('sec-cur-streak').textContent = stats.currentStreak;
+
+            // Render Sub-components
+            renderMainChart(stats);
+            renderDailyHeatmapAndRecent();
+            renderLedgerTable();
+            renderAttributionView();
+            const discData = renderDisciplineView(stats);
+            renderAiQuantView(stats, discData);
+            syncCsvTextarea();
+            lucide.createIcons();
+        }
+
+        function renderMiniSparkline(points) {
+            const svg = document.getElementById('hero-pnl-sparkline');
+            if (points.length < 2) { svg.innerHTML = ''; return; }
+            const min = Math.min(...points), max = Math.max(...points);
+            const range = (max - min) || 1;
+            const coords = points.map((v, i) => {
+                const x = (i / (points.length - 1)) * 80;
+                const y = 28 - ((v - min) / range) * 24;
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            }).join(' ');
+            const strokeCol = points[points.length - 1] >= 0 ? '#10B981' : '#F43F5E';
+            svg.innerHTML = `<polyline fill="none" stroke="${strokeCol}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${coords}" />`;
+        }
+
+        // =========================================================================
+        // 6. MAIN INTERACTIVE CHART STUDIO
+        // =========================================================================
+        function setMainChartMode(mode) {
+            mainChartMode = mode;
+            ['equity', 'rmultiple', 'histogram'].forEach(m => {
+                document.getElementById(`chart-tab-${m}`).className = m === mode
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-surfaceHover text-cyan-400 shadow-sm transition cursor-pointer'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition cursor-pointer';
+            });
+            renderMainChart(computeStats(trades));
+        }
+
+        function renderMainChart(stats) {
+            const ctx = document.getElementById('mainTelemetryChart').getContext('2d');
+            if (mainChartInstance) mainChartInstance.destroy();
+
+            if (mainChartMode === 'histogram') {
+                // Aggregate Daily Net P&L
+                const dailyMap = {};
+                trades.forEach(t => { dailyMap[t.date] = (dailyMap[t.date] || 0) + t.netPnL; });
+                const dates = Object.keys(dailyMap).sort();
+                const vals = dates.map(d => dailyMap[d]);
+
+                mainChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dates.map(d => d.slice(5)),
+                        datasets: [{
+                            label: 'Daily Net P&L ($)',
+                            data: vals,
+                            backgroundColor: vals.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(244, 63, 94, 0.75)'),
+                            borderColor: vals.map(v => v >= 0 ? '#10B981' : '#F43F5E'),
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: getChartOptions(v => `$${v}`, c => `Daily Net: ${fmtMoney(c.parsed.y)}`)
+                });
+                return;
+            }
+
+            const isEquity = mainChartMode === 'equity';
+            const labels = ['Start', ...trades.map(t => `#${t.id} ${t.asset}`)];
+            const series = isEquity ? stats.equityPoints : stats.rPoints;
+
+            const grad = ctx.createLinearGradient(0, 0, 0, 310);
+            grad.addColorStop(0, isEquity ? 'rgba(6, 182, 212, 0.28)' : 'rgba(99, 102, 241, 0.28)');
+            grad.addColorStop(1, 'rgba(6, 9, 15, 0)');
+
+            const datasets = [{
+                label: isEquity ? 'Cumulative Equity P&L ($)' : 'Cumulative R-Multiple',
+                data: series,
+                borderColor: isEquity ? '#06B6D4' : '#6366F1',
+                backgroundColor: grad,
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.28,
+                pointRadius: 3,
+                pointHoverRadius: 6,
+                pointBackgroundColor: series.map((_, idx) => idx === 0 ? '#64748B' : (trades[idx - 1]?.result === 'Win' ? '#10B981' : trades[idx - 1]?.result === 'Loss' ? '#F43F5E' : '#F59E0B')),
+                pointBorderColor: '#06090F',
+                pointBorderWidth: 1.5
+            }];
+
+            if (isEquity) {
+                datasets.push({
+                    label: 'Underwater Drawdown ($)',
+                    data: stats.underwaterPoints,
+                    borderColor: 'rgba(244, 63, 94, 0.55)',
+                    backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                    borderWidth: 1.5,
+                    borderDash: [4, 4],
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.25
+                });
+            }
+
+            mainChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets },
+                options: getChartOptions(
+                    v => isEquity ? `$${v}` : `${v}R`,
+                    c => `${c.dataset.label}: ${isEquity ? fmtMoney(c.parsed.y) : fmtR(c.parsed.y)}`
+                )
+            });
+        }
+
+        function getChartOptions(yTickFmt, tooltipFmt) {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { labels: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 11 } } },
+                    tooltip: {
+                        backgroundColor: '#0D121D',
+                        borderColor: 'rgba(255,255,255,0.14)',
+                        borderWidth: 1,
+                        padding: 10,
+                        titleFont: { family: 'JetBrains Mono', size: 11 },
+                        bodyFont: { family: 'JetBrains Mono', size: 12 },
+                        callbacks: { label: tooltipFmt }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#64748B', font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 12 } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 11 }, callback: yTickFmt } }
+                }
+            };
+        }
+
+        // =========================================================================
+        // 7. DAILY HEAT-MAP & RECENT EXECUTIONS FEED
+        // =========================================================================
+        function renderDailyHeatmapAndRecent() {
+            const dailyMap = {};
+            trades.forEach(t => { dailyMap[t.date] = (dailyMap[t.date] || 0) + t.netPnL; });
+            const dates = Object.keys(dailyMap).sort();
+            const heatGrid = document.getElementById('daily-heatmap-grid');
+
+            let greenDays = 0, redDays = 0;
+            heatGrid.innerHTML = dates.map(d => {
+                const val = dailyMap[d];
+                if (val > 0) greenDays++; else if (val < 0) redDays++;
+                let bgClass = 'bg-slate-800/80 border-white/[0.06] text-slate-400';
+                if (val >= 600) bgClass = 'bg-emerald-500/35 border-emerald-400/50 text-emerald-200';
+                else if (val > 0) bgClass = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300';
+                else if (val <= -300) bgClass = 'bg-rose-500/35 border-rose-400/50 text-rose-200';
+                else if (val < 0) bgClass = 'bg-rose-500/15 border-rose-500/30 text-rose-300';
+
+                return `
+                    <div title="${d}: ${fmtMoney(val)}" class="p-2 rounded-xl border ${bgClass} flex flex-col items-center justify-center text-center transition hover:scale-105">
+                        <span class="text-[9px] font-mono opacity-75">${d.slice(5)}</span>
+                        <span class="text-[11px] font-mono font-bold tabular-nums mt-0.5">${val >= 0 ? '+' : ''}${Math.round(val)}</span>
                     </div>
                 `;
-            }
+            }).join('');
+
+            document.getElementById('heatmap-green-days').textContent = `Green Days: ${greenDays}`;
+            document.getElementById('heatmap-red-days').textContent = `Red Days: ${redDays}`;
+
+            // Recent 5 Executions
+            const recent = [...trades].slice(-5).reverse();
+            document.getElementById('recent-trades-tbody').innerHTML = recent.map(t => `
+                <tr onclick="inspectTrade(${t.id})" class="hover:bg-white/[0.03] cursor-pointer transition">
+                    <td class="py-2.5 pr-3 font-bold text-white">${t.asset} <span class="text-[10px] font-normal ${t.direction === 'Long' ? 'text-emerald-400' : 'text-rose-400'}">${t.direction.toUpperCase()}</span></td>
+                    <td class="py-2.5 px-3 font-sans text-slate-300">${t.setup}</td>
+                    <td class="py-2.5 px-3 text-slate-400">${t.session}</td>
+                    <td class="py-2.5 px-3 text-right ${t.realizedR >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtR(t.realizedR)}</td>
+                    <td class="py-2.5 pl-3 text-right font-bold ${t.netPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtMoney(t.netPnL)}</td>
+                </tr>
+            `).join('');
         }
 
-        function changeMonth(dir) {
-            currentMonth += dir;
-            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-            renderCalendar();
+        // =========================================================================
+        // 8. EXECUTION LEDGER TABLE & INSPECTOR DRAWER
+        // =========================================================================
+        function sortLedger(key) {
+            if (ledgerSort.key === key) ledgerSort.asc = !ledgerSort.asc;
+            else { ledgerSort.key = key; ledgerSort.asc = false; }
+            renderLedgerTable();
         }
 
-        function inspectCalendarDate(dateStr) {
-            const dayTrades = trades.filter(t => t.date === dateStr);
-            document.getElementById('calendar-day-details').innerHTML = dayTrades.length === 0 
-                ? `No executions recorded on ${dateStr}.` 
-                : dayTrades.map(t => `<div class="p-2 bg-obsidian rounded-lg mb-1">${t.asset} (${t.direction}) — $${t.netPnL}</div>`).join('');
+        function renderLedgerTable() {
+            const q = (document.getElementById('ledger-search-input')?.value || '').toLowerCase();
+            const fRes = document.getElementById('filter-result')?.value || 'ALL';
+            const fSes = document.getElementById('filter-session')?.value || 'ALL';
+            const fAdh = document.getElementById('filter-adherence')?.value || 'ALL';
+
+            let list = trades.filter(t => {
+                if (fRes !== 'ALL' && t.result !== fRes) return false;
+                if (fSes !== 'ALL' && t.session !== fSes) return false;
+                if (fAdh !== 'ALL' && t.ruleAdherence !== fAdh) return false;
+                if (q && !(t.asset.toLowerCase().includes(q) || t.setup.toLowerCase().includes(q) || t.session.toLowerCase().includes(q) || t.violationReason.toLowerCase().includes(q))) return false;
+                return true;
+            });
+
+            list.sort((a, b) => {
+                const vA = a[ledgerSort.key], vB = b[ledgerSort.key];
+                return typeof vA === 'string'
+                    ? (ledgerSort.asc ? vA.localeCompare(vB) : vB.localeCompare(vA))
+                    : (ledgerSort.asc ? vA - vB : vB - vA);
+            });
+
+            document.getElementById('ledger-showing-count').textContent = `Showing ${list.length} of ${trades.length} executions`;
+
+            document.getElementById('ledger-full-tbody').innerHTML = list.map(t => {
+                const outcomeBadge = t.result === 'Win'
+                    ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">WIN</span>`
+                    : (t.result === 'Loss'
+                        ? `<span class="px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-400 border border-rose-500/25">LOSS</span>`
+                        : `<span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 border border-amber-500/25">BE</span>`);
+
+                const discBadge = t.ruleAdherence === 'Yes'
+                    ? `<span class="text-emerald-400">✓ A+ Plan</span>`
+                    : `<span class="text-rose-400">✕ ${t.violationReason}</span>`;
+
+                return `
+                    <tr onclick="inspectTrade(${t.id})" class="hover:bg-surfaceHover transition cursor-pointer">
+                        <td class="py-3 px-4 text-slate-500">#${t.id}</td>
+                        <td class="py-3 px-4 text-slate-300">${t.date} <span class="text-slate-500">${t.day}</span></td>
+                        <td class="py-3 px-4 font-bold text-white">${t.asset}</td>
+                        <td class="py-3 px-4 ${t.direction === 'Long' ? 'text-emerald-400' : 'text-rose-400'} font-semibold">${t.direction.toUpperCase()}</td>
+                        <td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded-md bg-white/[0.05] text-slate-200 border border-white/[0.08]">${t.setup}</span></td>
+                        <td class="py-3 px-4 text-slate-400">${t.session}</td>
+                        <td class="py-3 px-4 text-right text-slate-400">$${t.riskAmount}</td>
+                        <td class="py-3 px-4 text-center">${outcomeBadge}</td>
+                        <td class="py-3 px-4 text-right ${t.realizedR >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtR(t.realizedR)}</td>
+                        <td class="py-3 px-4 text-right font-bold ${t.netPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtMoney(t.netPnL)}</td>
+                        <td class="py-3 px-4 font-sans text-xs">${discBadge}</td>
+                        <td class="py-3 px-4 text-center" onclick="event.stopPropagation(); deleteTradeById(${t.id})">
+                            <button class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer" title="Delete">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            lucide.createIcons();
         }
 
+        function inspectTrade(id) {
+            const t = trades.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('inspector-content').innerHTML = `
+                <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                    <div>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-cyan-400">Execution #${t.id}</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-0.5">${t.asset} — ${t.direction.toUpperCase()}</h3>
+                    </div>
+                    <span class="px-3 py-1 rounded-full font-mono text-xs font-bold ${t.netPnL >= 0 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-rose-500/15 text-rose-400'}">${fmtMoney(t.netPnL)}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 font-mono text-xs tabular-nums">
+                    <div class="p-3 rounded-xl bg-obsidian border border-white/[0.08]"><span class="text-slate-500 block font-sans text-[11px]">Date & Session</span><strong class="text-white">${t.date} (${t.day}) • ${t.session}</strong></div>
+                    <div class="p-3 rounded-xl bg-obsidian border border-white/[0.08]"><span class="text-slate-500 block font-sans text-[11px]">Playbook Setup</span><strong class="text-cyan-300">${t.setup}</strong></div>
+                    <div class="p-3 rounded-xl bg-obsidian border border-white/[0.08]"><span class="text-slate-500 block font-sans text-[11px]">Risk Allocated</span><strong class="text-white">$${t.riskAmount.toFixed(2)}</strong></div>
+                    <div class="p-3 rounded-xl bg-obsidian border border-white/[0.08]"><span class="text-slate-500 block font-sans text-[11px]">Realized R-Multiple</span><strong class="${t.realizedR >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtR(t.realizedR)}</strong></div>
+                </div>
+                <div class="p-4 rounded-xl bg-obsidian border border-white/[0.08]">
+                    <span class="text-[11px] font-mono uppercase text-slate-500 block mb-1">Rule Adherence Audit</span>
+                    <div class="text-sm font-semibold ${t.ruleAdherence === 'Yes' ? 'text-emerald-400' : 'text-rose-400'}">
+                        ${t.ruleAdherence === 'Yes' ? '✓ Executed strictly according to system rules' : `✕ Violation Logged: ${t.violationReason}`}
+                    </div>
+                </div>
+            `;
+            document.getElementById('inspector-delete-btn').onclick = () => { deleteTradeById(t.id); closeInspector(); };
+            document.getElementById('inspector-backdrop').classList.remove('hidden');
+            document.getElementById('inspector-drawer').classList.remove('translate-x-full');
+        }
+
+        function closeInspector() {
+            document.getElementById('inspector-backdrop').classList.add('hidden');
+            document.getElementById('inspector-drawer').classList.add('translate-x-full');
+        }
+
+        // =========================================================================
+        // 9. EDGE & ATTRIBUTION MATRIX
+        // =========================================================================
+        function setAttributionGroup(group) {
+            attributionGroup = group;
+            ['setup', 'direction', 'day', 'session'].forEach(g => {
+                document.getElementById(`attr-btn-${g}`).className = g === group
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.09] text-white transition cursor-pointer'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer';
+            });
+            renderAttributionView();
+        }
+
+        function getAttributionSegments(key) {
+            const map = {};
+            trades.forEach(t => {
+                const seg = t[key] || 'Other';
+                if (!map[seg]) map[seg] = [];
+                map[seg].push(t);
+            });
+            return Object.keys(map).map(seg => {
+                const sub = map[seg];
+                const s = computeStats(sub);
+                return {
+                    segment: seg,
+                    count: sub.length,
+                    winRate: s.winRateExclBE,
+                    pf: s.profitFactor,
+                    avgR: sub.length > 0 ? s.totalR / sub.length : 0,
+                    netPnL: s.netPnL
+                };
+            }).sort((a, b) => b.netPnL - a.netPnL);
+        }
+
+        function renderAttributionView() {
+            const rows = getAttributionSegments(attributionGroup);
+            document.getElementById('attribution-tbody').innerHTML = rows.map(r => {
+                const pfStr = r.pf === Infinity ? '∞' : r.pf.toFixed(2);
+                const pfCol = r.pf >= 1.5 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (r.pf >= 1.0 ? 'bg-white/[0.06] text-slate-300 border-white/[0.1]' : 'bg-rose-500/15 text-rose-400 border-rose-500/25');
+                return `
+                    <tr class="hover:bg-surfaceHover transition">
+                        <td class="py-3.5 px-5 font-sans font-semibold text-white">${r.segment}</td>
+                        <td class="py-3.5 px-3 text-right text-slate-400">${r.count}</td>
+                        <td class="py-3.5 px-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                                    <div class="h-full bg-cyan-400" style="width: ${r.winRate}%"></div>
+                                </div>
+                                <span class="text-slate-300">${r.winRate.toFixed(0)}%</span>
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[11px] border ${pfCol}">${pfStr}</span></td>
+                        <td class="py-3.5 px-3 text-right ${r.avgR >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtR(r.avgR)}</td>
+                        <td class="py-3.5 px-5 text-right font-bold ${r.netPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtMoney(r.netPnL)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Horizontal Bar Chart
+            const ctx = document.getElementById('attributionBarChart').getContext('2d');
+            if (attrBarChartInstance) attrBarChartInstance.destroy();
+            attrBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: rows.map(r => r.segment),
+                    datasets: [{
+                        label: 'Net P&L ($)',
+                        data: rows.map(r => r.netPnL),
+                        backgroundColor: rows.map(r => r.netPnL >= 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(244, 63, 94, 0.75)'),
+                        borderColor: rows.map(r => r.netPnL >= 0 ? '#10B981' : '#F43F5E'),
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 }, callback: v => `$${v}` } },
+                        y: { grid: { display: false }, ticks: { color: '#E2E8F0', font: { family: 'Inter', size: 11 } } }
+                    }
+                }
+            });
+        }
+
+        // =========================================================================
+        // 10. DISCIPLINE & WHAT-IF LEAK SIMULATOR
+        // =========================================================================
+        function renderDisciplineView(allStats) {
+            const yesTrades = trades.filter(t => t.ruleAdherence === 'Yes');
+            const noTrades = trades.filter(t => t.ruleAdherence === 'No');
+            const yesStats = computeStats(yesTrades);
+            const noStats = computeStats(noTrades);
+
+            document.getElementById('disc-yes-trades').textContent = `${yesStats.total} Executions`;
+            document.getElementById('disc-yes-pnl').textContent = fmtMoney(yesStats.netPnL);
+            document.getElementById('disc-yes-r').textContent = fmtR(yesStats.totalR);
+            document.getElementById('disc-yes-wr').textContent = `${yesStats.winRateExclBE.toFixed(1)}%`;
+            document.getElementById('disc-yes-pf').textContent = yesStats.profitFactor === Infinity ? '∞' : yesStats.profitFactor.toFixed(2);
+
+            document.getElementById('disc-no-trades').textContent = `${noStats.total} Executions`;
+            document.getElementById('disc-no-pnl').textContent = fmtMoney(noStats.netPnL);
+            document.getElementById('disc-no-r').textContent = fmtR(noStats.totalR);
+            document.getElementById('disc-no-wr').textContent = `${noStats.winRateExclBE.toFixed(1)}%`;
+
+            // Group Violations by Tag
+            const tagGroups = {};
+            noTrades.forEach(t => {
+                const tag = t.violationReason || 'Unspecified';
+                if (!tagGroups[tag]) tagGroups[tag] = { count: 0, pnl: 0 };
+                tagGroups[tag].count++;
+                tagGroups[tag].pnl += t.netPnL;
+            });
+
+            const tagKeys = Object.keys(tagGroups);
+            document.getElementById('violation-tag-breakdown').innerHTML = tagKeys.length === 0
+                ? `<span class="text-xs text-emerald-400">Zero rule violations recorded.</span>`
+                : tagKeys.map(tag => `
+                    <span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-rose-500/10 text-rose-300 border border-rose-500/25 tabular-nums">
+                        ${tag}: <strong>${fmtMoney(tagGroups[tag].pnl)}</strong> (${tagGroups[tag].count})
+                    </span>
+                `).join('');
+
+            // Simulator Interactive Pills
+            const simPills = document.getElementById('simulator-toggle-pills');
+            simPills.innerHTML = tagKeys.map(tag => {
+                const isExcluded = excludedViolationsInSim.has(tag);
+                return `
+                    <button onclick="toggleSimViolation('${tag}')" class="px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-2 border transition cursor-pointer ${isExcluded ? 'bg-indigo-500/20 border-indigo-400/50 text-indigo-200' : 'bg-obsidian border-white/[0.1] text-slate-400'}">
+                        <span>${isExcluded ? '✕ Excluded:' : '+ Included:'} ${tag}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const simulatedTrades = trades.filter(t => !(t.ruleAdherence === 'No' && excludedViolationsInSim.has(t.violationReason)));
+            const simStats = computeStats(simulatedTrades);
+            const delta = simStats.netPnL - allStats.netPnL;
+
+            document.getElementById('sim-actual-pnl').textContent = fmtMoney(allStats.netPnL);
+            document.getElementById('sim-clean-pnl').textContent = fmtMoney(simStats.netPnL);
+            document.getElementById('sim-delta-pnl').textContent = `(${delta >= 0 ? '+' : ''}${fmtMoney(delta)})`;
+            document.getElementById('sim-clean-wr').textContent = `${simStats.winRateExclBE.toFixed(1)}%`;
+            document.getElementById('sim-clean-pf').textContent = `PF: ${simStats.profitFactor === Infinity ? '∞' : simStats.profitFactor.toFixed(2)}`;
+
+            return { yesStats, noStats, tagGroups };
+        }
+
+        function toggleSimViolation(tag) {
+            if (excludedViolationsInSim.has(tag)) excludedViolationsInSim.delete(tag);
+            else excludedViolationsInSim.add(tag);
+            renderDisciplineView(computeStats(trades));
+        }
+
+        function resetSimulatorFilters() {
+            excludedViolationsInSim = new Set(trades.filter(t => t.ruleAdherence === 'No').map(t => t.violationReason));
+            renderDisciplineView(computeStats(trades));
+        }
+
+        // =========================================================================
+        // 11. AI QUANT ANALYST & LLM PROMPT BUILDER
+        // =========================================================================
+        function renderAiQuantView(stats, discData) {
+            const setups = getAttributionSegments('setup');
+            const worstSetup = setups[setups.length - 1];
+            const bestSetup = setups[0];
+            const sessions = getAttributionSegments('session');
+            const worstSession = sessions[sessions.length - 1];
+
+            const recs = [
+                {
+                    severity: 'CRITICAL LEAK',
+                    badgeClass: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+                    title: `Quarantine "${worstSetup?.segment || 'Underperforming'}" Playbook`,
+                    detail: `"${worstSetup?.segment}" is dragging portfolio expectancy with ${fmtMoney(worstSetup?.netPnL || 0)} net P&L and a ${(worstSetup?.winRate || 0).toFixed(1)}% win rate. Reallocate risk capital to "${bestSetup?.segment}" (${fmtMoney(bestSetup?.netPnL || 0)}).`
+                },
+                {
+                    severity: 'BEHAVIORAL EDGE',
+                    badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+                    title: `Eliminate ${discData.noStats.total} Unplanned Rule Violations`,
+                    detail: `Rule violations leaked ${fmtMoney(discData.noStats.netPnL)} (${fmtR(discData.noStats.totalR)}). Enforcing a hard daily lockout after 1 violation lifts your Profit Factor from ${stats.profitFactor.toFixed(2)} to ${discData.yesStats.profitFactor.toFixed(2)}.`
+                },
+                {
+                    severity: 'SESSION TIMING',
+                    badgeClass: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+                    title: `Restrict Execution Window in ${worstSession?.segment || 'Asia'} Session`,
+                    detail: `${worstSession?.segment} session executions yielded ${fmtMoney(worstSession?.netPnL || 0)} (${fmtR(worstSession?.avgR || 0)} avg R). Concentrate primary risk during peak liquidity windows.`
+                }
+            ];
+
+            document.getElementById('ai-recommendations-container').innerHTML = recs.map((r, i) => `
+                <div class="saas-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${r.badgeClass} mb-3">0${i + 1} • ${r.severity}</span>
+                        <h3 class="font-display font-bold text-sm text-white mb-2">${r.title}</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">${r.detail}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Build Full Statistical Prompt for LLM
+            const csvLines = trades.map(t => `#${t.id} | ${t.date} (${t.day}) | ${t.session} | ${t.asset} | ${t.direction} | ${t.setup} | Risk:$${t.riskAmount} | ${t.result} | ${fmtMoney(t.netPnL)} (${fmtR(t.realizedR)}) | Adherent:${t.ruleAdherence} (${t.violationReason})`).join('\n');
+
+            currentPromptPayload = `Act as a quantitative trading analyst and institutional risk manager. Analyze my trading log below and provide a deep statistical performance audit:
+
+### Current Portfolio Telemetry
+- Total Executions: ${stats.total} (${stats.wCount}W / ${stats.lCount}L / ${stats.beCount}BE)
+- Win Rate (Excl. BE): ${stats.winRateExclBE.toFixed(1)}% (Gross: ${stats.winRateGross.toFixed(1)}%)
+- Profit Factor: ${stats.profitFactor === Infinity ? '∞' : stats.profitFactor.toFixed(2)}
+- Expectancy per Trade: ${fmtMoney(stats.expectancyDollar)} (${fmtR(stats.expectancyR)})
+- Realized R:R: ${stats.realizedRR.toFixed(2)} : 1
+- Max Drawdown: -${fmtMoney(stats.maxDdDollar, false)} (-${stats.maxDdPct.toFixed(2)}%)
+- Cost of Rule Violations: ${fmtMoney(discData.noStats.netPnL)} across ${discData.noStats.total} trades
+
+### Trade Execution Log
+${csvLines}`;
+
+            document.getElementById('llm-prompt-preview').textContent = currentPromptPayload;
+        }
+
+        function copyFullStatisticalPrompt() {
+            const ta = document.createElement('textarea');
+            ta.value = currentPromptPayload;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('Full statistical prompt & trade log copied to clipboard!', 'info');
+        }
+
+        // =========================================================================
+        // 12. MODAL & CSV DRAWER HANDLERS
+        // =========================================================================
         function openExecutionModal() { document.getElementById('execution-modal').classList.remove('hidden'); }
         function closeExecutionModal() { document.getElementById('execution-modal').classList.add('hidden'); }
 
-        function submitTrade(e) {
-            e.preventDefault();
-            trades.push({
-                id: trades.length + 1,
-                date: document.getElementById('inp-date').value,
-                asset: document.getElementById('inp-asset').value.toUpperCase(),
-                direction: 'Long',
-                result: document.getElementById('inp-result').value,
-                netPnL: parseFloat(document.getElementById('inp-pnl').value)
-            });
-            closeExecutionModal();
-            refreshApp();
+        function setFormDirection(dir) {
+            document.getElementById('inp-direction').value = dir;
+            document.getElementById('seg-dir-long').className = dir === 'Long' ? 'py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-pointer' : 'py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer';
+            document.getElementById('seg-dir-short').className = dir === 'Short' ? 'py-1.5 rounded-lg text-xs font-mono font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30 cursor-pointer' : 'py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer';
         }
 
-        async function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const chatBox = document.getElementById('chat-messages');
-            chatBox.innerHTML += `<div class="p-3 rounded-xl bg-indigo-600/20 text-indigo-200 ml-auto max-w-lg">${msg}</div>`;
-            input.value = '';
-
-            setTimeout(() => {
-                chatBox.innerHTML += `<div class="p-3 rounded-xl bg-surface border border-white/[0.08] max-w-lg text-slate-300">Based on your ledger, your win rate is healthy. Keep managing your risk per trade strictly.</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
-        }
-
-        // CONNECTED TO app.py BACKEND ON PORT 5000
-        async function syncFromBrokerApi() {
-            const email = prompt("Enter your Broker Email / Username:");
-            const password = prompt("Enter your Broker Password:");
-            if (!email || !password) return;
-
-            try {
-                const res = await fetch('http://localhost:5000/api/sync-broker', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, broker: 'iqoption' })
-                });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    trades = [...trades, ...data.trades];
-                    refreshApp();
-                    alert(`Successfully synced ${data.trades.length} trades from broker!`);
+        function setFormResult(res) {
+            document.getElementById('inp-result').value = res;
+            ['Win', 'Loss', 'Breakeven'].forEach(r => {
+                const key = r === 'Breakeven' ? 'be' : r.toLowerCase();
+                const btn = document.getElementById(`seg-res-${key}`);
+                if (r === res) {
+                    const activeCol = res === 'Win' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : (res === 'Loss' ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-amber-500/20 text-amber-400 border-amber-500/30');
+                    btn.className = `py-1.5 rounded-lg text-xs font-mono font-semibold border cursor-pointer ${activeCol}`;
                 } else {
-                    alert(data.message || 'Sync failed.');
+                    btn.className = 'py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer';
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Could not connect to Python backend. Make sure app.py is running via python app.py.');
+            });
+            const risk = parseFloat(document.getElementById('inp-risk').value) || 200;
+            if (res === 'Loss') document.getElementById('inp-pnl').value = -Math.abs(risk);
+            else if (res === 'Breakeven') document.getElementById('inp-pnl').value = 0;
+            else if (parseFloat(document.getElementById('inp-pnl').value) <= 0) document.getElementById('inp-pnl').value = risk * 2.5;
+            autoCalculateFormR();
+        }
+
+        function autoCalculateFormR() {
+            const risk = parseFloat(document.getElementById('inp-risk').value) || 1;
+            const pnl = parseFloat(document.getElementById('inp-pnl').value) || 0;
+            document.getElementById('inp-realized-r').value = (pnl / risk).toFixed(2);
+        }
+
+        function setFormAdherence(val) {
+            document.getElementById('inp-adherence').value = val;
+            document.getElementById('seg-adh-yes').className = val === 'Yes' ? 'px-3 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-400 cursor-pointer' : 'px-3 py-1 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer';
+            document.getElementById('seg-adh-no').className = val === 'No' ? 'px-3 py-1 rounded-lg text-xs font-mono font-semibold bg-rose-500/20 text-rose-400 cursor-pointer' : 'px-3 py-1 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white cursor-pointer';
+            document.getElementById('violation-reason-wrapper').classList.toggle('hidden', val === 'Yes');
+        }
+
+        function submitNewExecution(e) {
+            e.preventDefault();
+            const dateStr = document.getElementById('inp-date').value;
+            const dObj = new Date(dateStr + 'T12:00:00');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const dayName = isNaN(dObj.getTime()) ? 'Mon' : days[dObj.getDay()];
+
+            const adherence = document.getElementById('inp-adherence').value;
+            const violation = adherence === 'No' ? document.getElementById('inp-violation-reason').value : 'None';
+            const nextId = trades.length > 0 ? Math.max(...trades.map(t => t.id)) + 1 : 1;
+
+            trades.push({
+                id: nextId,
+                date: dateStr,
+                day: dayName,
+                session: document.getElementById('inp-session').value,
+                asset: document.getElementById('inp-asset').value.toUpperCase().trim(),
+                direction: document.getElementById('inp-direction').value,
+                setup: document.getElementById('inp-setup').value.trim(),
+                riskAmount: parseFloat(document.getElementById('inp-risk').value) || 200,
+                plannedRR: 2.5,
+                result: document.getElementById('inp-result').value,
+                netPnL: parseFloat(document.getElementById('inp-pnl').value) || 0,
+                realizedR: parseFloat(document.getElementById('inp-realized-r').value) || 0,
+                ruleAdherence: adherence,
+                violationReason: violation
+            });
+
+            if (adherence === 'No') excludedViolationsInSim.add(violation);
+            saveToStorage();
+            refreshAllViews();
+            closeExecutionModal();
+            showToast(`Execution #${nextId} committed to ledger.`);
+        }
+
+        function deleteTradeById(id) {
+            trades = trades.filter(t => t.id !== id);
+            saveToStorage();
+            refreshAllViews();
+            showToast(`Execution #${id} deleted.`, 'warn');
+        }
+
+        // CSV Import & Export Drawer
+        function openCsvDrawer() {
+            syncCsvTextarea();
+            document.getElementById('csv-drawer-backdrop').classList.remove('hidden');
+            document.getElementById('csv-drawer').classList.remove('translate-x-full');
+        }
+
+        function closeCsvDrawer() {
+            document.getElementById('csv-drawer-backdrop').classList.add('hidden');
+            document.getElementById('csv-drawer').classList.add('translate-x-full');
+        }
+
+        function syncCsvTextarea() {
+            const header = 'ID,Date,Day,Session,Asset,Direction,Setup,Risk,PlannedRR,Result,NetPnL,RealizedR,RuleAdherence,ViolationReason';
+            const rows = trades.map(t => `${t.id},${t.date},${t.day},${t.session},${t.asset},${t.direction},${t.setup},${t.riskAmount},${t.plannedRR},${t.result},${t.netPnL},${t.realizedR},${t.ruleAdherence},${t.violationReason}`);
+            document.getElementById('bulk-csv-textarea').value = [header, ...rows].join('\n');
+        }
+
+        function importBulkCSV() {
+            const raw = document.getElementById('bulk-csv-textarea').value.trim();
+            if (!raw) return;
+            const lines = raw.split(/\r?\n/).filter(l => l.trim().length > 0);
+            const parsed = [];
+
+            lines.forEach((line, idx) => {
+                if (/^id\s*,/i.test(line) || /^trade/i.test(line)) return;
+                const cols = (line.includes('|') ? line.split('|') : line.split(',')).map(c => c.trim());
+                if (cols.length >= 11) {
+                    const risk = Math.abs(parseFloat(cols[7].replace(/[^0-9.-]/g, ''))) || 200;
+                    const pnl = parseFloat(cols[10].replace(/[^0-9.-]/g, '')) || 0;
+                    const rMult = cols[11] ? parseFloat(cols[11].replace(/[^0-9.-]/g, '')) : (pnl / risk);
+                    parsed.push({
+                        id: parseInt(cols[0].replace(/[^0-9]/g, '')) || (idx + 1),
+                        date: cols[1] || '2026-10-01',
+                        day: cols[2] || 'Mon',
+                        session: cols[3] || 'NY',
+                        asset: cols[4] || 'ASSET',
+                        direction: cols[5] || 'Long',
+                        setup: cols[6] || 'Breakout',
+                        riskAmount: risk,
+                        plannedRR: parseFloat(cols[8]) || 2.0,
+                        result: cols[9] || (pnl > 0 ? 'Win' : pnl < 0 ? 'Loss' : 'Breakeven'),
+                        netPnL: pnl,
+                        realizedR: isNaN(rMult) ? 0 : rMult,
+                        ruleAdherence: /^no/i.test(cols[12] || '') ? 'No' : 'Yes',
+                        violationReason: cols[13] || (/^no/i.test(cols[12] || '') ? 'Rule Violation' : 'None')
+                    });
+                }
+            });
+
+            if (parsed.length > 0) {
+                trades = parsed;
+                excludedViolationsInSim = new Set(trades.filter(t => t.ruleAdherence === 'No').map(t => t.violationReason));
+                saveToStorage();
+                refreshAllViews();
+                closeCsvDrawer();
+                showToast(`Synced ${parsed.length} executions from CSV.`);
             }
+        }
+
+        function exportTradesCSV() {
+            syncCsvTextarea();
+            const blob = new Blob([document.getElementById('bulk-csv-textarea').value], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `quantedge_pro_export_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exported CSV dataset.');
         }
     </script>
 </body>
